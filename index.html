@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory Optimization AI Agent</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+:root {
+  --bg-0: #070B14;
+  --bg-1: #0C1220;
+  --bg-2: #111827;
+  --bg-3: #1A2236;
+  --bg-4: #1F2D45;
+  --border: rgba(99,130,183,0.14);
+  --border-hover: rgba(99,130,183,0.3);
+  --accent: #3B82F6;
+  --accent-glow: rgba(59,130,246,0.15);
+  --accent2: #06B6D4;
+  --red: #EF4444;
+  --red-bg: rgba(239,68,68,0.1);
+  --amber: #F59E0B;
+  --amber-bg: rgba(245,158,11,0.1);
+  --green: #10B981;
+  --green-bg: rgba(16,185,129,0.1);
+  --blue: #3B82F6;
+  --blue-bg: rgba(59,130,246,0.1);
+  --purple: #8B5CF6;
+  --purple-bg: rgba(139,92,246,0.1);
+  --text-1: #F1F5FF;
+  --text-2: #94A3C4;
+  --text-3: #5A6B8A;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-head: 'Sora', sans-serif;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-0);
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-1); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── HEADER ── */
+.header {
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo-mark { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, #3B82F6, #06B6D4);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head);
+  font-size: 14px; font-weight: 700; color: white;
+}
+.logo-text { font-family: var(--font-head); font-size: 15px; font-weight: 600; color: var(--text-1); }
+.logo-sub { font-size: 10px; color: var(--text-3); margin-top: 1px; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.badge-live {
+  background: rgba(16,185,129,0.12);
+  color: #10B981;
+  font-size: 10px; font-weight: 600;
+  padding: 3px 9px; border-radius: 20px;
+  border: 1px solid rgba(16,185,129,0.2);
+  letter-spacing: 0.5px;
+}
+.sync-info { font-size: 11px; color: var(--text-3); }
+.btn-sm {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 5px 12px; border-radius: var(--radius-sm);
+  font-size: 11px; cursor: pointer; font-family: var(--font-body);
+  transition: all 0.15s;
+}
+.btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+.btn-accent {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: white;
+  padding: 5px 14px; border-radius: var(--radius-sm);
+  font-size: 11px; cursor: pointer; font-family: var(--font-body);
+  transition: all 0.15s;
+}
+.btn-accent:hover { background: #2563EB; }
+
+/* ── NAV ── */
+.nav {
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 0; padding: 0 24px;
+}
+.nav-btn {
+  background: none; border: none;
+  color: var(--text-3);
+  font-size: 12px; font-family: var(--font-body);
+  padding: 11px 16px; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s; letter-spacing: 0.2px;
+}
+.nav-btn:hover { color: var(--text-1); }
+.nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── LAYOUT ── */
+.content { padding: 20px 24px; min-height: calc(100vh - 112px); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── DATA CONNECT BANNER ── */
+.data-banner {
+  background: var(--bg-2);
+  border: 1px dashed var(--border-hover);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 14px;
+}
+.data-banner.connected { border-color: rgba(16,185,129,0.3); border-style: solid; }
+.banner-icon { font-size: 24px; }
+.banner-body { flex: 1; }
+.banner-title { font-weight: 600; font-size: 13px; color: var(--text-1); margin-bottom: 2px; }
+.banner-sub { font-size: 11px; color: var(--text-3); }
+.banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.file-input-hidden { display: none; }
+
+/* ── KPI GRID ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+.kpi-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  transition: border-color 0.2s;
+}
+.kpi-card:hover { border-color: var(--border-hover); }
+.kpi-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.kpi-val { font-family: var(--font-head); font-size: 20px; font-weight: 600; color: var(--text-1); }
+.kpi-sub { font-size: 10px; margin-top: 4px; }
+.kpi-red { color: var(--red); }
+.kpi-amber { color: var(--amber); }
+.kpi-green { color: var(--green); }
+.kpi-blue { color: var(--accent); }
+.kpi-purple { color: var(--purple); }
+
+/* ── SECTION ── */
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; margin-top: 18px;
+}
+.section-title {
+  font-family: var(--font-head);
+  font-size: 11px; font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin-bottom: 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+}
+.filter-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+.filter-select, .filter-input {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px; font-family: var(--font-body);
+  outline: none; cursor: pointer;
+  transition: border-color 0.15s;
+}
+.filter-select:hover, .filter-input:hover { border-color: var(--border-hover); }
+.filter-select:focus, .filter-input:focus { border-color: var(--accent); }
+.filter-divider { width: 1px; height: 20px; background: var(--border); }
+.filter-count { font-size: 10px; color: var(--text-3); white-space: nowrap; }
+
+/* ── CHARTS ROW ── */
+.charts-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.charts-row-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.charts-row-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.chart-half { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.chart-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.chart-card h3 {
+  font-size: 11px; font-weight: 500; color: var(--text-2);
+  margin-bottom: 14px; letter-spacing: 0.1px;
+}
+.chart-legend {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-bottom: 10px; font-size: 10px; color: var(--text-3);
+}
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 4px; }
+
+/* ── TABLE ── */
+.table-wrap {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 420px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 11px; }
+thead { position: sticky; top: 0; z-index: 2; }
+th {
+  background: var(--bg-3);
+  color: var(--text-3);
+  padding: 9px 12px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 7px 12px;
+  color: var(--text-2);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg-3); }
+.mono { font-family: var(--font-mono); font-size: 10px; color: var(--accent); }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-block;
+  font-size: 9px; font-weight: 600;
+  padding: 2px 7px; border-radius: 10px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.badge-Critical  { background: rgba(239,68,68,0.15);  color: #F87171; border: 1px solid rgba(239,68,68,0.2); }
+.badge-High      { background: rgba(245,158,11,0.15); color: #FBBF24; border: 1px solid rgba(245,158,11,0.2); }
+.badge-Medium    { background: rgba(16,185,129,0.12); color: #34D399; border: 1px solid rgba(16,185,129,0.2); }
+.badge-OK        { background: rgba(59,130,246,0.12); color: #60A5FA; border: 1px solid rgba(59,130,246,0.2); }
+.badge-A         { background: rgba(239,68,68,0.15);  color: #F87171; border: 1px solid rgba(239,68,68,0.2); }
+.badge-B         { background: rgba(245,158,11,0.15); color: #FBBF24; border: 1px solid rgba(245,158,11,0.2); }
+.badge-C         { background: rgba(59,130,246,0.12); color: #60A5FA; border: 1px solid rgba(59,130,246,0.2); }
+.badge-Critical2 { background: rgba(139,92,246,0.15); color: #A78BFA; border: 1px solid rgba(139,92,246,0.2); }
+.badge-Non-Critical { background: rgba(16,185,129,0.12); color: #34D399; border: 1px solid rgba(16,185,129,0.2); }
+
+/* ── BAR ── */
+.bar-wrap { display: flex; align-items: center; gap: 6px; }
+.bar-bg { flex: 1; min-width: 50px; height: 5px; background: var(--bg-4); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+
+/* ── EXPORT BTN GROUP ── */
+.export-row { display: flex; gap: 8px; align-items: center; }
+.btn-export {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--bg-3); border: 1px solid var(--border);
+  color: var(--text-2); padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 11px; cursor: pointer; font-family: var(--font-body);
+  transition: all 0.15s;
+}
+.btn-export:hover { border-color: var(--accent); color: var(--accent); }
+.btn-export svg { width: 12px; height: 12px; }
+
+/* ── AI PANEL ── */
+.ai-layout { display: grid; grid-template-columns: 1fr 300px; gap: 14px; }
+.ai-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px;
+}
+.ai-card h3 { font-size: 12px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+.ai-card p  { font-size: 11px; color: var(--text-3); margin-bottom: 14px; }
+.quick-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.quick-btn {
+  background: var(--bg-3); border: 1px solid var(--border);
+  color: var(--text-3); font-size: 10px;
+  padding: 4px 10px; border-radius: 14px;
+  cursor: pointer; font-family: var(--font-body);
+  transition: all 0.15s;
+}
+.quick-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ai-chat {
+  min-height: 200px; max-height: 260px;
+  overflow-y: auto; margin-bottom: 12px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.ai-msg {
+  padding: 9px 13px; border-radius: var(--radius-sm);
+  font-size: 12px; line-height: 1.55;
+}
+.ai-msg.bot { background: var(--bg-3); color: var(--text-2); border-left: 2px solid var(--accent); }
+.ai-msg.usr { background: rgba(16,185,129,0.08); color: #A7F3D0; text-align: right; border-right: 2px solid var(--green); }
+.ai-input-row { display: flex; gap: 8px; }
+.ai-input {
+  flex: 1; background: var(--bg-3); border: 1px solid var(--border);
+  color: var(--text-1); padding: 8px 13px;
+  border-radius: var(--radius-sm); font-size: 12px;
+  font-family: var(--font-body); outline: none;
+}
+.ai-input:focus { border-color: var(--accent); }
+.ai-key-input {
+  width: 100%;
+  background: var(--bg-3); border: 1px solid var(--border);
+  color: var(--text-1); padding: 8px 13px;
+  border-radius: var(--radius-sm); font-size: 12px;
+  font-family: var(--font-mono); outline: none;
+  margin-bottom: 10px;
+}
+.ai-key-input:focus { border-color: var(--accent); }
+.ai-send {
+  background: var(--accent); color: white;
+  border: none; border-radius: var(--radius-sm);
+  padding: 8px 16px; font-size: 12px;
+  cursor: pointer; font-family: var(--font-body);
+  transition: background 0.15s;
+}
+.ai-send:hover { background: #2563EB; }
+.ai-send:disabled { background: var(--bg-4); color: var(--text-3); cursor: not-allowed; }
+
+/* ── PROGRESS RING ── */
+.spinner {
+  display: inline-block; width: 12px; height: 12px;
+  border: 2px solid rgba(59,130,246,0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.6s linear infinite;
+  vertical-align: middle; margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── REFRESH STATUS ── */
+.refresh-bar {
+  position: fixed; bottom: 16px; right: 16px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 10px 14px;
+  font-size: 11px; color: var(--text-3);
+  display: flex; align-items: center; gap: 8px; z-index: 200;
+}
+.refresh-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+.refresh-dot.warning { background: var(--amber); }
+
+/* ── SETUP MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(7,11,20,0.85);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 300;
+}
+.modal {
+  background: var(--bg-2); border: 1px solid var(--border-hover);
+  border-radius: 14px; padding: 30px;
+  width: 520px; max-width: 94vw;
+}
+.modal h2 { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--text-1); margin-bottom: 6px; }
+.modal p  { font-size: 12px; color: var(--text-3); margin-bottom: 18px; line-height: 1.6; }
+.modal-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+.modal-tab { background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-3); font-size: 12px; font-family: var(--font-body); padding: 7px 14px; cursor: pointer; }
+.modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.modal-tab-content { display: none; }
+.modal-tab-content.active { display: block; }
+.drop-zone {
+  border: 1.5px dashed var(--border-hover);
+  border-radius: var(--radius); padding: 30px;
+  text-align: center; cursor: pointer;
+  transition: all 0.2s; margin-bottom: 14px;
+}
+.drop-zone:hover { border-color: var(--accent); background: var(--accent-glow); }
+.drop-zone p { font-size: 12px; color: var(--text-3); margin: 0; }
+.drop-zone .drop-icon { font-size: 28px; margin-bottom: 8px; }
+.url-row { display: flex; gap: 8px; }
+.url-input {
+  flex: 1; background: var(--bg-3); border: 1px solid var(--border);
+  color: var(--text-1); padding: 8px 12px;
+  border-radius: var(--radius-sm); font-size: 12px;
+  font-family: var(--font-mono); outline: none;
+}
+.url-input:focus { border-color: var(--accent); }
+.inline-code { font-family: var(--font-mono); background: var(--bg-3); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 10px; color: var(--accent2); }
+
+/* ── ADVANCED ANALYTICS ── */
+.adv-kpi-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+.adv-section { margin-bottom: 24px; }
+.adv-section-title {
+  font-family: var(--font-head);
+  font-size: 11px; font-weight: 600;
+  color: var(--accent2);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.metric-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.metric-card:hover { border-color: var(--border-hover); }
+.metric-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 5px; }
+.metric-val { font-family: var(--font-head); font-size: 22px; font-weight: 600; }
+.metric-sub { font-size: 10px; color: var(--text-3); margin-top: 3px; }
+.metric-formula { font-size: 9px; color: var(--text-3); margin-top: 5px; font-family: var(--font-mono); opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-mark">
+    <div class="logo-icon">IO</div>
+    <div>
+      <div class="logo-text">Inventory Optimization AI Agent</div>
+      <div class="logo-sub">Building Materials · SKU-Level Intelligence</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="badge-live">● LIVE</div>
+    <div class="sync-info" id="syncInfo">Last sync: —</div>
+    <button class="btn-sm" onclick="manualRefresh()">↻ Refresh Now</button>
+    <button class="btn-sm" onclick="showDataModal()">⚡ Connect Data</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn active" onclick="switchTab('overview', this)">Overview</button>
+  <button class="nav-btn" onclick="switchTab('urgency', this)">Urgency Matrix</button>
+  <button class="nav-btn" onclick="switchTab('skus', this)">SKU Details</button>
+  <button class="nav-btn" onclick="switchTab('advanced', this)">Advanced Analytics</button>
+  <button class="nav-btn" onclick="switchTab('ai', this)">AI Agent</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- ══════════ OVERVIEW TAB ══════════ -->
+  <div id="tab-overview" class="tab-content active">
+
+    <div class="filter-bar">
+      <span class="filter-label">Category Slicer</span>
+      <select class="filter-select" id="ovCatFilter" onchange="applyOverviewFilter()">
+        <option value="">All Categories</option>
+      </select>
+      <div class="filter-divider"></div>
+      <span class="filter-count" id="ovCount">—</span>
+      <div style="margin-left:auto; display:flex; gap:6px;">
+        <button class="btn-sm" onclick="document.getElementById('ovCatFilter').value=''; applyOverviewFilter()">Clear</button>
+      </div>
+    </div>
+
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="section-head">
+      <div class="section-title">Inventory Health</div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>Stock status distribution</h3>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:#EF4444"></span>Critical</span>
+          <span><span class="legend-dot" style="background:#F59E0B"></span>High</span>
+          <span><span class="legend-dot" style="background:#10B981"></span>Medium</span>
+          <span><span class="legend-dot" style="background:#3B82F6"></span>OK</span>
+        </div>
+        <div style="position:relative;height:170px;"><canvas id="c1"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Avg days of inventory vs lead time</h3>
+        <div style="position:relative;height:190px;"><canvas id="c2"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Inventory value by category (AED '000)</h3>
+        <div style="position:relative;height:190px;"><canvas id="c3"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-half">
+      <div class="chart-card">
+        <h3>Items below safety stock by category</h3>
+        <div style="position:relative;height:170px;"><canvas id="c4"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Target coverage — above vs below target</h3>
+        <div style="position:relative;height:170px;"><canvas id="c5"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div class="section-title">Top Critical SKUs — Immediate Reorder Required</div>
+      <div class="export-row">
+        <button class="btn-export" onclick="exportData('csv','critical')">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1v9M5 7l3 3 3-3M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2"/></svg>
+          CSV
+        </button>
+        <button class="btn-export" onclick="exportData('excel','critical')">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 5l6 6M11 5l-6 6"/></svg>
+          Excel
+        </button>
+        <button class="btn-export" onclick="exportData('pdf','critical')">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 1h6l4 4v10H4z"/><path d="M10 1v4h4"/><path d="M6 8h4M6 11h4"/></svg>
+          PDF
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap" id="criticalTable"></div>
+  </div>
+
+  <!-- ══════════ URGENCY MATRIX TAB ══════════ -->
+  <div id="tab-urgency" class="tab-content">
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter</span>
+      <select class="filter-select" id="urgCatFilter" onchange="applyUrgencyFilter()">
+        <option value="">All Categories</option>
+      </select>
+      <select class="filter-select" id="urgLevelFilter" onchange="applyUrgencyFilter()">
+        <option value="">All Urgency Levels</option>
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="OK">OK</option>
+      </select>
+      <input class="filter-input" id="urgSearch" placeholder="Search SKU / name..." oninput="applyUrgencyFilter()" style="min-width:160px;">
+      <div class="filter-divider"></div>
+      <span class="filter-count" id="urgCount">—</span>
+      <div style="margin-left:auto; display:flex; gap:6px;">
+        <button class="btn-export" onclick="exportData('csv','all')">CSV</button>
+        <button class="btn-export" onclick="exportData('excel','all')">Excel</button>
+        <button class="btn-export" onclick="exportData('pdf','all')">PDF</button>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:14px;">
+      <h3>Scatter plot — days of inventory remaining vs supplier lead time · bubble size = inventory value</h3>
+      <div class="chart-legend">
+        <span><span class="legend-dot" style="background:rgba(239,68,68,0.8)"></span>Critical</span>
+        <span><span class="legend-dot" style="background:rgba(245,158,11,0.8)"></span>High</span>
+        <span><span class="legend-dot" style="background:rgba(16,185,129,0.8)"></span>Medium</span>
+        <span><span class="legend-dot" style="background:rgba(59,130,246,0.7)"></span>OK</span>
+      </div>
+      <div style="position:relative;height:320px;"><canvas id="scatterChart"></canvas></div>
+    </div>
+
+    <div class="section-head">
+      <div class="section-title">All SKUs — Urgency Categorization</div>
+      <span class="filter-count" id="tableCount">—</span>
+    </div>
+    <div class="table-wrap" id="urgencyTable"></div>
+  </div>
+
+  <!-- ══════════ SKU DETAILS TAB ══════════ -->
+  <div id="tab-skus" class="tab-content">
+    <div class="filter-bar">
+      <span class="filter-label">Filter</span>
+      <select class="filter-select" id="skuCatF" onchange="renderSKUTable()">
+        <option value="">All Categories</option>
+      </select>
+      <select class="filter-select" id="skuUrgF" onchange="renderSKUTable()">
+        <option value="">All Urgency</option>
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="OK">OK</option>
+      </select>
+      <select class="filter-select" id="skuSort" onchange="renderSKUTable()">
+        <option value="urgency">Sort: Urgency</option>
+        <option value="value">Sort: Value ↓</option>
+        <option value="days">Sort: Days left ↑</option>
+        <option value="gap">Sort: Gap % ↑</option>
+        <option value="eoq">Sort: EOQ ↓</option>
+        <option value="criticality">Sort: Criticality ↓</option>
+      </select>
+      <input class="filter-input" id="skuSearchF" placeholder="Search SKU..." oninput="renderSKUTable()" style="min-width:150px;">
+      <div class="filter-divider"></div>
+      <span class="filter-count" id="skuCount">—</span>
+      <div style="margin-left:auto; display:flex; gap:6px;">
+        <button class="btn-export" onclick="exportData('csv','all')">CSV</button>
+        <button class="btn-export" onclick="exportData('excel','all')">Excel</button>
+      </div>
+    </div>
+    <div class="table-wrap" id="skuTable"></div>
+  </div>
+
+  <!-- ══════════ ADVANCED ANALYTICS TAB ══════════ -->
+  <div id="tab-advanced" class="tab-content">
+
+    <!-- Top filter bar -->
+    <div class="filter-bar">
+      <span class="filter-label">Filter</span>
+      <select class="filter-select" id="advCatFilter" onchange="renderAdvanced()">
+        <option value="">All Categories</option>
+      </select>
+      <select class="filter-select" id="advSupFilter" onchange="renderAdvanced()">
+        <option value="">All Suppliers</option>
+      </select>
+      <div class="filter-divider"></div>
+      <span class="filter-count" id="advCount">—</span>
+      <div style="margin-left:auto; display:flex; gap:6px;">
+        <button class="btn-export" onclick="exportAdvanced('csv')">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1v9M5 7l3 3 3-3M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2"/></svg>
+          Export Advanced CSV
+        </button>
+        <button class="btn-export" onclick="exportAdvanced('excel')">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 5l6 6M11 5l-6 6"/></svg>
+          Export Advanced Excel
+        </button>
+      </div>
+    </div>
+
+    <!-- ── SECTION 1: TURNOVER & EFFICIENCY ── -->
+    <div class="adv-section">
+      <div class="adv-section-title">📊 Inventory Efficiency</div>
+      <div class="metric-row" id="effMetrics"></div>
+      <div class="charts-row-2">
+        <div class="chart-card">
+          <h3>Inventory Turnover / Month by category</h3>
+          <div style="position:relative;height:200px;"><canvas id="advC1"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Days of Inventory Outstanding (DIO) by category</h3>
+          <div style="position:relative;height:200px;"><canvas id="advC2"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 2: ACCURACY & QUALITY ── -->
+    <div class="adv-section">
+      <div class="adv-section-title">🎯 Accuracy & Quality</div>
+      <div class="metric-row" id="accMetrics"></div>
+      <div class="charts-row-2">
+        <div class="chart-card">
+          <h3>Inventory Accuracy Rate by category (%)</h3>
+          <div style="position:relative;height:200px;"><canvas id="advC3"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Shrinkage Rate & Obsolete Inventory by category (%)</h3>
+          <div class="chart-legend">
+            <span><span class="legend-dot" style="background:#EF4444"></span>Shrinkage Rate %</span>
+            <span><span class="legend-dot" style="background:#8B5CF6"></span>Obsolete %</span>
+          </div>
+          <div style="position:relative;height:180px;"><canvas id="advC4"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3: SERVICE LEVELS ── -->
+    <div class="adv-section">
+      <div class="adv-section-title">🚀 Service Levels</div>
+      <div class="metric-row" id="svcMetrics"></div>
+      <div class="charts-row-2">
+        <div class="chart-card">
+          <h3>Stockout Rate & Backorder Rate by category (%)</h3>
+          <div class="chart-legend">
+            <span><span class="legend-dot" style="background:#EF4444"></span>Stockout Rate %</span>
+            <span><span class="legend-dot" style="background:#F59E0B"></span>Backorder Rate %</span>
+          </div>
+          <div style="position:relative;height:200px;"><canvas id="advC5"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Order Fill Rate & Inventory Returns by category</h3>
+          <div class="chart-legend">
+            <span><span class="legend-dot" style="background:#10B981"></span>Fill Rate %</span>
+            <span><span class="legend-dot" style="background:#06B6D4"></span>Return Rate %</span>
+          </div>
+          <div style="position:relative;height:200px;"><canvas id="advC6"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 4: PROCUREMENT PLANNING ── -->
+    <div class="adv-section">
+      <div class="adv-section-title">🛒 Procurement Planning (EOQ / Safety Stock / ROP)</div>
+      <div class="metric-row" id="procMetrics"></div>
+      <div class="charts-row-2">
+        <div class="chart-card">
+          <h3>Economic Order Quantity (EOQ) vs Current Order Size by supplier</h3>
+          <div style="position:relative;height:200px;"><canvas id="advC7"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Safety Stock Coverage — actual vs recommended (avg by category)</h3>
+          <div style="position:relative;height:200px;"><canvas id="advC8"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 5: ABC / CRITICALITY CLASSIFICATION ── -->
+    <div class="adv-section">
+      <div class="adv-section-title">🏷️ SKU Classification — ABC & Criticality</div>
+      <div class="charts-row">
+        <div class="chart-card">
+          <h3>ABC distribution (by inventory value)</h3>
+          <div class="chart-legend">
+            <span><span class="legend-dot" style="background:#EF4444"></span>A — Top 80% value</span>
+            <span><span class="legend-dot" style="background:#F59E0B"></span>B — Next 15%</span>
+            <span><span class="legend-dot" style="background:#3B82F6"></span>C — Bottom 5%</span>
+          </div>
+          <div style="position:relative;height:170px;"><canvas id="advC9"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Criticality Score distribution</h3>
+          <div style="position:relative;height:170px;"><canvas id="advC10"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>SKU Criticality by category (avg score)</h3>
+          <div style="position:relative;height:170px;"><canvas id="advC11"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ADVANCED SKU TABLE ── -->
+    <div class="section-head">
+      <div class="section-title">Advanced SKU Table — All Computed Metrics</div>
+      <div class="export-row">
+        <button class="btn-export" onclick="exportAdvanced('csv')">CSV</button>
+        <button class="btn-export" onclick="exportAdvanced('excel')">Excel</button>
+      </div>
+    </div>
+    <div class="filter-bar" style="margin-bottom:10px;">
+      <span class="filter-label">View</span>
+      <select class="filter-select" id="advTableView" onchange="renderAdvTable()">
+        <option value="efficiency">Efficiency (Turnover, DIO, Avg Inventory)</option>
+        <option value="accuracy">Accuracy &amp; Shrinkage</option>
+        <option value="service">Service Levels (Stockout, Fill Rate, Returns)</option>
+        <option value="procurement">Procurement (Safety Stock, ROP, EOQ)</option>
+        <option value="classification">Classification (ABC, Criticality)</option>
+      </select>
+      <input class="filter-input" id="advSearchF" placeholder="Search SKU..." oninput="renderAdvTable()" style="min-width:150px;">
+      <div class="filter-divider"></div>
+      <span class="filter-count" id="advTableCount">—</span>
+    </div>
+    <div class="table-wrap" id="advTable"></div>
+  </div>
+
+  <!-- ══════════ AI AGENT TAB ══════════ -->
+  <div id="tab-ai" class="tab-content">
+    <div class="ai-layout">
+      <div class="ai-card">
+        <h3>AI Inventory Analyst</h3>
+        <p>Powered by Claude AI. Provide your Anthropic API key to enable live analysis of your inventory data.</p>
+
+        <div id="aiKeySection" style="margin-bottom:14px; background:var(--bg-3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+          <div style="font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:6px;">🔑 API Key Required</div>
+          <div style="font-size:10px;color:var(--text-3);margin-bottom:10px;line-height:1.6;">
+            1. Go to <strong style="color:var(--accent)">console.anthropic.com</strong> → API Keys → Create Key<br>
+            2. Paste your key below (stored locally in your browser only)<br>
+            3. Never share your API key publicly
+          </div>
+          <input class="ai-key-input" type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off">
+          <div style="display:flex;gap:8px;">
+            <button class="btn-accent" onclick="saveAPIKey()" style="font-size:11px;padding:6px 14px;">Save Key</button>
+            <button class="btn-sm" onclick="testAPIKey()" style="font-size:11px;">Test Connection</button>
+            <div id="keyStatus" style="font-size:10px;color:var(--text-3);align-self:center;"></div>
+          </div>
+        </div>
+
+        <div class="quick-btns">
+          <button class="quick-btn" onclick="askAI('Which SKUs need immediate reorder this week? List top 5 with quantities.')">Immediate reorders?</button>
+          <button class="quick-btn" onclick="askAI('What is total reorder cost if I action all critical and high priority items?')">Total reorder cost?</button>
+          <button class="quick-btn" onclick="askAI('Which category has the worst inventory coverage? Why?')">Worst coverage?</button>
+          <button class="quick-btn" onclick="askAI('Show me items where current stock is 15% or more below target stock level.')">Below target 15%?</button>
+          <button class="quick-btn" onclick="askAI('Summarize overall inventory health and give top 3 procurement actions.')">Health summary?</button>
+          <button class="quick-btn" onclick="askAI('Which items are overstocked above 120% of target? Suggest liquidation.')">Overstock items?</button>
+          <button class="quick-btn" onclick="askAI('Which SKUs have the highest EOQ vs current order mismatch?')">EOQ mismatches?</button>
+          <button class="quick-btn" onclick="askAI('What is the overall inventory accuracy rate and which categories need cycle counting?')">Accuracy issues?</button>
+        </div>
+
+        <div class="ai-chat" id="aiChat"></div>
+        <div class="ai-input-row">
+          <input class="ai-input" id="aiInput" placeholder="Ask about your inventory data..." onkeydown="if(event.key==='Enter')sendAIMsg()">
+          <button class="ai-send" id="aiSendBtn" onclick="sendAIMsg()">Ask →</button>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="chart-card">
+          <h3>Reorder value by category (AED '000)</h3>
+          <div style="position:relative;height:190px;"><canvas id="aiChart1"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Stock gap severity</h3>
+          <div class="chart-legend">
+            <span><span class="legend-dot" style="background:#EF4444"></span>Severe &lt;-30%</span>
+            <span><span class="legend-dot" style="background:#F59E0B"></span>High -30 to -15%</span>
+            <span><span class="legend-dot" style="background:#10B981"></span>Mild 0 to -15%</span>
+            <span><span class="legend-dot" style="background:#3B82F6"></span>OK / Above</span>
+          </div>
+          <div style="position:relative;height:140px;"><canvas id="aiChart2"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- REFRESH STATUS -->
+<div class="refresh-bar" id="refreshBar">
+  <div class="refresh-dot" id="refreshDot"></div>
+  <span id="refreshText">Auto-refresh: 5 min</span>
+</div>
+
+<!-- DATA CONNECT MODAL -->
+<div class="modal-overlay" id="dataModal" style="display:none;">
+  <div class="modal">
+    <h2>Connect Data Source</h2>
+    <p>Connect your inventory data to this dashboard. The file should contain SKU-level data with the required fields. Once connected, the dashboard auto-refreshes every 5 minutes.</p>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchModalTab('file', this)">Upload File</button>
+      <button class="modal-tab" onclick="switchModalTab('url', this)">Remote URL</button>
+      <button class="modal-tab" onclick="switchModalTab('script', this)">JS Data File</button>
+      <button class="modal-tab" onclick="switchModalTab('format', this)">Data Format</button>
+    </div>
+
+    <div id="modal-tab-file" class="modal-tab-content active">
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileImport').click()"
+        ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+        ondragleave="this.style.borderColor=''"
+        ondrop="handleFileDrop(event)">
+        <div class="drop-icon">📁</div>
+        <p style="font-weight:600;color:var(--text-1);margin-bottom:4px;">Drop file here or click to browse</p>
+        <p>Supports: CSV, XLSX, JSON · Max 50MB</p>
+      </div>
+      <input type="file" id="fileImport" class="file-input-hidden" accept=".csv,.xlsx,.json" onchange="handleFileImport(event)">
+      <div id="fileStatus" style="font-size:11px;color:var(--text-3);min-height:20px;"></div>
+    </div>
+
+    <div id="modal-tab-url" class="modal-tab-content">
+      <p style="font-size:11px;color:var(--text-3);margin-bottom:10px;">Enter a public URL that returns CSV, JSON, or XLSX. The dashboard will fetch this URL every 5 minutes automatically.</p>
+      <div class="url-row" style="margin-bottom:10px;">
+        <input class="url-input" id="remoteUrl" placeholder="https://yourdomain.com/inventory-export.csv">
+        <button class="btn-accent" onclick="connectRemoteURL()" style="white-space:nowrap;font-size:11px;padding:8px 14px;">Connect</button>
+      </div>
+      <div id="urlStatus" style="font-size:11px;color:var(--text-3);"></div>
+    </div>
+
+    <div id="modal-tab-script" class="modal-tab-content">
+      <p style="font-size:11px;color:var(--text-3);margin-bottom:10px;">
+        For GitHub deployment, place <span class="inline-code">inventory_data.js</span> in the same folder as this HTML file.
+        The dashboard loads it automatically on start.<br><br>
+        The data file must set <span class="inline-code">window.INVENTORY_DATA = [...]</span> — an array of SKU objects.
+        It is already included in the download package.
+      </p>
+      <button class="btn-sm" onclick="reloadDataScript()" style="font-size:11px;">↻ Reload inventory_data.js</button>
+      <div id="scriptStatus" style="font-size:11px;color:var(--text-3);margin-top:8px;"></div>
+    </div>
+
+    <div id="modal-tab-format" class="modal-tab-content">
+      <p style="font-size:11px;color:var(--text-3);margin-bottom:10px;">Required core columns (header names, case-insensitive). Extended v2.0 fields unlock Advanced Analytics tab:</p>
+      <table style="width:100%;font-size:10px;">
+        <thead><tr>
+          <th style="padding:5px 8px;text-align:left;background:var(--bg-3);color:var(--text-3);">Column</th>
+          <th style="padding:5px 8px;text-align:left;background:var(--bg-3);color:var(--text-3);">Type</th>
+          <th style="padding:5px 8px;text-align:left;background:var(--bg-3);color:var(--text-3);">Description</th>
+        </tr></thead>
+        <tbody id="formatTableBody"></tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;border-top:1px solid var(--border);padding-top:16px;">
+      <button class="btn-sm" onclick="document.getElementById('dataModal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let ALL_SKUS = [];
+let FILTERED_SKUS = [];
+let charts = {};
+let remoteDataUrl = localStorage.getItem('inv_remote_url') || '';
+let refreshTimer = null;
+let lastRefresh = null;
+let ovCat = '';
+
+// ══════════════════════════════════════════════
+//  CONSTANTS
+// ══════════════════════════════════════════════
+const Z_95 = 1.645;  // 95% service level Z-score for safety stock
+const WORKING_DAYS = 22; // per month
+const CALENDAR_DAYS = 30;
+
+// ══════════════════════════════════════════════
+//  CORE KPI CALCULATIONS (existing + extended)
+// ══════════════════════════════════════════════
+function calcKPIs(raw) {
+  return raw.map(r => {
+    // ── Base fields ────────────────────────────────────────────────
+    const leadDays  = +r.leadDays  || 7;
+    const ads       = +r.avgDailySales || 1;
+    const cur       = +r.currentStock  || 0;
+    const cost      = +r.unitCost      || 0;
+
+    // ── EXISTING: safety stock (simple: leadDays * 1.5 * ads) ─────
+    const safetyStockDays = Math.round(leadDays * 1.5);
+    const safetyStock     = Math.round(safetyStockDays * ads);
+
+    // ── ADVANCED: safety stock with demand variability (Z-score) ──
+    const stdDev    = +r.demandStdDev || ads * 0.3;
+    const safetyStockAdv = Math.round(Z_95 * stdDev * Math.sqrt(leadDays));
+
+    // ── Reorder Point (ROP) ────────────────────────────────────────
+    // ROP = (avg daily demand × lead time) + safety stock
+    const reorderPoint   = Math.round(ads * leadDays + safetyStockAdv);
+
+    // ── Target & Threshold ────────────────────────────────────────
+    const targetStock    = Math.round((leadDays + safetyStockDays) * ads * 1.15);
+    const thresholdPoint = Math.round(targetStock * 0.85);
+    const inventoryValue = Math.round(cur * cost);
+
+    // ── Days Remaining & Gap ──────────────────────────────────────
+    const daysRemaining  = ads > 0 ? Math.round(cur / ads) : 999;
+    const stockGapPct    = Math.round(((cur - targetStock) / Math.max(1, targetStock)) * 1000) / 10;
+    const reorderQty     = Math.max(0, targetStock - cur);
+    const reorderValue   = Math.round(reorderQty * cost);
+
+    // ── Urgency ───────────────────────────────────────────────────
+    let urgency = 'OK';
+    if (cur <= safetyStock || daysRemaining < leadDays)              urgency = 'Critical';
+    else if (cur <= reorderPoint || daysRemaining < leadDays * 1.5)  urgency = 'High';
+    else if (cur <= thresholdPoint)                                   urgency = 'Medium';
+
+    // ── Stock Coverage (Days) ─────────────────────────────────────
+    const stockCoverageDays = ads > 0 ? Math.round(cur / ads) : 999;
+
+    // ── Recommended Stock & Purchase Recommendation ───────────────
+    const recommendedStock = Math.round(ads * (leadDays + safetyStockDays) * 1.1);
+    const purchaseRecommendationQty = Math.max(0, recommendedStock - cur);
+
+    // ── INVENTORY TURNOVER / MONTH ─────────────────────────────────
+    // Monthly demand / Average inventory level
+    const monthlyDemand = ads * CALENDAR_DAYS;
+    const avgInventoryLevel = (cur + Math.max(0, cur - monthlyDemand)) / 2;
+    const invTurnoverMonth = avgInventoryLevel > 0
+      ? Math.round((monthlyDemand / avgInventoryLevel) * 100) / 100
+      : 0;
+
+    // ── DAYS OF INVENTORY OUTSTANDING (DIO) ───────────────────────
+    // DIO = (Avg Inventory / COGS per day)
+    // Using avgInventoryLevel and daily cost as COGS proxy
+    const dailyCOGS = ads * cost;
+    const avgInvValue = avgInventoryLevel * cost;
+    const dio = dailyCOGS > 0
+      ? Math.round((avgInvValue / dailyCOGS) * 10) / 10
+      : 999;
+
+    // ── AVERAGE INVENTORY LEVEL ───────────────────────────────────
+    // Simple average: (max stock + safety stock) / 2
+    const avgInventoryLevelUnits = Math.round((targetStock + safetyStock) / 2);
+
+    // ── INVENTORY ACCURACY RATE ───────────────────────────────────
+    // |counted - system| / system * 100 → accuracy = 100 - error%
+    const systemQty  = +r.systemQty  || cur;
+    const countedQty = +r.countedQty || cur;
+    const countDiscrepancy = Math.abs(countedQty - systemQty);
+    const invAccuracyPct = systemQty > 0
+      ? Math.round((1 - countDiscrepancy / systemQty) * 10000) / 100
+      : 100;
+    // Monthly accuracy same as single count here; Year = avg (simulated slightly lower)
+    const invAccuracyMonthPct = invAccuracyPct;
+    const invAccuracyYearPct  = Math.round(Math.max(invAccuracyPct * 0.97, invAccuracyPct - 3) * 100) / 100;
+
+    // ── CYCLE COUNT ACCURACY / MONTH ─────────────────────────────
+    const cycleCountAccuracyPct = invAccuracyPct; // based on same physical count
+
+    // ── SHRINKAGE RATE / MONTH ────────────────────────────────────
+    const shrinkageUnits = +r.shrinkageUnits || 0;
+    const shrinkagePct = monthlyDemand > 0
+      ? Math.round((shrinkageUnits / monthlyDemand) * 10000) / 100
+      : 0;
+
+    // ── STOCKOUT RATE / MONTH ─────────────────────────────────────
+    const stockoutsLastMonth   = +r.stockoutsLastMonth   || 0;
+    const totalOrdersLastMonth = +r.totalOrdersLastMonth || 1;
+    const stockoutRatePct = Math.round((stockoutsLastMonth / totalOrdersLastMonth) * 10000) / 100;
+
+    // ── STOCKOUT FREQUENCY ────────────────────────────────────────
+    const stockoutFrequency = stockoutsLastMonth; // events/month
+
+    // ── BACKORDER RATE / MONTH ────────────────────────────────────
+    const backoredersLastMonth = +r.backoredersLastMonth || 0;
+    const backorderRatePct = Math.round((backoredersLastMonth / totalOrdersLastMonth) * 10000) / 100;
+
+    // ── ORDER FILL RATE / MONTH ───────────────────────────────────
+    const filledOrders    = Math.max(0, totalOrdersLastMonth - backoredersLastMonth);
+    const orderFillRatePct = Math.round((filledOrders / totalOrdersLastMonth) * 10000) / 100;
+
+    // ── OBSOLETE INVENTORY / MONTH ────────────────────────────────
+    const obsoleteUnits = +r.obsoleteUnits || 0;
+    const obsoleteValue = Math.round(obsoleteUnits * cost);
+    const obsoletePct   = cur > 0
+      ? Math.round((obsoleteUnits / cur) * 10000) / 100
+      : 0;
+
+    // ── INVENTORY RETURN / MONTH ──────────────────────────────────
+    const returnedUnits = +r.returnedUnits || 0;
+    const returnValue   = Math.round(returnedUnits * cost);
+    const returnRatePct = monthlyDemand > 0
+      ? Math.round((returnedUnits / monthlyDemand) * 10000) / 100
+      : 0;
+
+    // ── ECONOMIC ORDER QUANTITY (EOQ) ─────────────────────────────
+    // EOQ = sqrt(2 * annual demand * ordering cost / holding cost per unit)
+    const orderingCost   = +r.orderingCost   || 300;
+    const holdingCostPct = +r.holdingCostPct || 0.25;
+    const annualDemand   = ads * 365;
+    const holdingCostPerUnit = cost * holdingCostPct;
+    const eoq = holdingCostPerUnit > 0
+      ? Math.round(Math.sqrt((2 * annualDemand * orderingCost) / holdingCostPerUnit))
+      : reorderQty;
+
+    // ── SKU CRITICALITY SCORE ─────────────────────────────────────
+    // Composite score 1-10 based on:
+    // - Unit cost (weight 25%)
+    // - Lead time (weight 20%)
+    // - Avg daily sales (weight 20%)
+    // - Stockout rate (weight 20%)
+    // - Urgency level (weight 15%)
+    const maxCost  = 850, maxLead = 28, maxSales = 15;
+    const cScore = (
+      (Math.min(cost, maxCost)  / maxCost  * 10 * 0.25) +
+      (Math.min(leadDays, maxLead) / maxLead * 10 * 0.20) +
+      (Math.min(ads, maxSales)  / maxSales  * 10 * 0.20) +
+      (Math.min(stockoutRatePct / 20, 1)    * 10 * 0.20) +
+      ({ Critical: 10, High: 7, Medium: 4, OK: 1 }[urgency] * 0.15)
+    );
+    const criticalityScore = +r.criticalityScore || Math.round(Math.min(10, Math.max(1, cScore)) * 10) / 10;
+    const criticality = criticalityScore >= 7 ? 'Critical' : criticalityScore >= 4 ? 'Non-Critical' : 'Non-Critical';
+
+    // ── ABC CLASSIFICATION ────────────────────────────────────────
+    // Computed after all SKUs known (done in calcABC)
+    const abcClass = null; // set by calcABC()
+
+    return {
+      ...r,
+      leadDays, avgDailySales: ads, currentStock: cur, unitCost: cost,
+      // Core existing
+      safetyStock, reorderPoint, targetStock, thresholdPoint,
+      inventoryValue, daysRemaining, stockGapPct, reorderQty, reorderValue, urgency,
+      // New core additions
+      safetyStockAdv, stockCoverageDays, recommendedStock, purchaseRecommendationQty,
+      // Advanced KPIs
+      invTurnoverMonth, dio, avgInventoryLevelUnits, avgInventoryLevel,
+      invAccuracyMonthPct, invAccuracyYearPct, cycleCountAccuracyPct,
+      shrinkageUnits, shrinkagePct,
+      stockoutRatePct, stockoutFrequency,
+      backorderRatePct, orderFillRatePct,
+      obsoleteUnits, obsoleteValue, obsoletePct,
+      returnedUnits, returnValue, returnRatePct,
+      eoq, orderingCost, holdingCostPct,
+      criticalityScore, criticality,
+      abcClass
+    };
+  });
+}
+
+function calcABC(skus) {
+  // Sort by inventoryValue desc, assign ABC based on cumulative value %
+  const sorted = [...skus].sort((a, b) => b.inventoryValue - a.inventoryValue);
+  const total  = sorted.reduce((s, x) => s + x.inventoryValue, 0);
+  let cumul = 0;
+  const abcMap = {};
+  sorted.forEach(s => {
+    cumul += s.inventoryValue;
+    const pct = cumul / total;
+    abcMap[s.sku] = pct <= 0.80 ? 'A' : pct <= 0.95 ? 'B' : 'C';
+  });
+  return skus.map(s => ({ ...s, abcClass: abcMap[s.sku] || 'C' }));
+}
+
+// ══════════════════════════════════════════════
+//  LOAD DATA
+// ══════════════════════════════════════════════
+function loadBuiltinData() {
+  if (window.INVENTORY_DATA && window.INVENTORY_DATA.length) {
+    ALL_SKUS = calcABC(calcKPIs(window.INVENTORY_DATA));
+    onDataLoaded('Built-in data (inventory_data.js)');
+  } else {
+    ALL_SKUS = calcABC(calcKPIs(generateFallbackData()));
+    onDataLoaded('Generated sample data (504 SKUs)');
+  }
+}
+
+function onDataLoaded(source) {
+  lastRefresh = new Date();
+  populateFilters();
+  ovCat = '';
+  applyOverviewFilter();
+  renderUrgencyFilter();
+  renderSKUTable();
+  renderAICharts();
+  renderAdvanced();
+  updateSyncInfo(source);
+  startAutoRefresh();
+  buildFormatTable();
+}
+
+function updateSyncInfo(source) {
+  const t = lastRefresh ? lastRefresh.toLocaleTimeString() : '—';
+  document.getElementById('syncInfo').textContent = `Last sync: ${t} · ${ALL_SKUS.length} SKUs`;
+  document.getElementById('refreshText').textContent = `Auto-refresh: 5 min · ${source || 'connected'}`;
+}
+
+// ══════════════════════════════════════════════
+//  AUTO REFRESH
+// ══════════════════════════════════════════════
+function startAutoRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => {
+    if (remoteDataUrl) fetchRemoteData(remoteDataUrl, false);
+    else if (window.INVENTORY_DATA) { ALL_SKUS = calcABC(calcKPIs(window.INVENTORY_DATA)); onDataLoaded('Auto-refresh'); }
+    updateRefreshDot();
+  }, 5 * 60 * 1000);
+}
+
+function manualRefresh() {
+  const dot = document.getElementById('refreshDot');
+  dot.style.background = 'var(--amber)';
+  if (remoteDataUrl) {
+    fetchRemoteData(remoteDataUrl, false).then(() => dot.style.background = 'var(--green)');
+  } else {
+    if (window.INVENTORY_DATA) ALL_SKUS = calcABC(calcKPIs(window.INVENTORY_DATA));
+    applyOverviewFilter();
+    renderUrgencyFilter();
+    renderSKUTable();
+    renderAdvanced();
+    onDataLoaded('Manual refresh');
+    setTimeout(() => dot.style.background = 'var(--green)', 400);
+  }
+}
+
+function updateRefreshDot() {
+  document.getElementById('refreshDot').style.background = 'var(--green)';
+}
+
+// ══════════════════════════════════════════════
+//  POPULATE FILTERS
+// ══════════════════════════════════════════════
+function populateFilters() {
+  const cats = [...new Set(ALL_SKUS.map(s => s.cat))].sort();
+  const sups  = [...new Set(ALL_SKUS.map(s => s.supplier))].sort();
+
+  ['ovCatFilter','urgCatFilter','skuCatF','advCatFilter'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const cur = el.value;
+    el.innerHTML = '<option value="">All Categories</option>';
+    cats.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c; o.textContent = c;
+      if (c === cur) o.selected = true;
+      el.appendChild(o);
+    });
+  });
+
+  const supEl = document.getElementById('advSupFilter');
+  if (supEl) {
+    const cur = supEl.value;
+    supEl.innerHTML = '<option value="">All Suppliers</option>';
+    sups.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s; o.textContent = s;
+      if (s === cur) o.selected = true;
+      supEl.appendChild(o);
+    });
+  }
+}
+
+// ══════════════════════════════════════════════
+//  OVERVIEW FILTER
+// ══════════════════════════════════════════════
+function applyOverviewFilter() {
+  ovCat = document.getElementById('ovCatFilter').value;
+  FILTERED_SKUS = ovCat ? ALL_SKUS.filter(s => s.cat === ovCat) : ALL_SKUS;
+  document.getElementById('ovCount').textContent =
+    FILTERED_SKUS.length + ' SKUs' + (ovCat ? ` · ${ovCat}` : '');
+  renderKPIs(FILTERED_SKUS);
+  renderOverviewCharts(FILTERED_SKUS);
+  renderCriticalTable(FILTERED_SKUS);
+}
+
+// ══════════════════════════════════════════════
+//  KPI CARDS
+// ══════════════════════════════════════════════
+function renderKPIs(skus) {
+  const total    = skus.length;
+  const critical = skus.filter(s => s.urgency === 'Critical').length;
+  const high     = skus.filter(s => s.urgency === 'High').length;
+  const totalVal = skus.reduce((a, s) => a + s.inventoryValue, 0);
+  const reoVal   = skus.filter(s => s.urgency === 'Critical' || s.urgency === 'High')
+                       .reduce((a, s) => a + s.reorderValue, 0);
+  const coverage = total ? (skus.filter(s => s.currentStock >= s.targetStock).length / total * 100).toFixed(1) : 0;
+  const kpis = [
+    { label: 'Total SKUs',           val: total.toLocaleString(),                  sub: 'Active items',                    cls: '' },
+    { label: 'Critical — Reorder',   val: critical,                                sub: `${(critical/Math.max(1,total)*100).toFixed(0)}% of portfolio`, cls: 'kpi-red' },
+    { label: 'High Priority',        val: high,                                    sub: 'Within lead window',              cls: 'kpi-amber' },
+    { label: 'Inventory Value',      val: 'AED ' + Math.round(totalVal/1000)+'K',  sub: 'At current stock',                cls: '' },
+    { label: 'Reorder Budget',       val: 'AED ' + Math.round(reoVal/1000)+'K',   sub: 'Critical + High items',           cls: 'kpi-amber' },
+    { label: 'Target Coverage',      val: coverage + '%',                           sub: 'SKUs at or above target',         cls: parseFloat(coverage)>70?'kpi-green':'kpi-red' },
+  ];
+  document.getElementById('kpiGrid').innerHTML = kpis.map(k =>
+    `<div class="kpi-card"><div class="kpi-label">${k.label}</div><div class="kpi-val ${k.cls}">${k.val}</div><div class="kpi-sub ${k.cls}">${k.sub}</div></div>`
+  ).join('');
+}
+
+// ══════════════════════════════════════════════
+//  OVERVIEW CHARTS
+// ══════════════════════════════════════════════
+function destroyChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+function renderOverviewCharts(skus) {
+  const cats = ovCat ? [ovCat] : [...new Set(ALL_SKUS.map(s => s.cat))].sort();
+
+  destroyChart('c1');
+  charts['c1'] = new Chart(document.getElementById('c1'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Critical','High','Medium','OK'],
+      datasets: [{ data: ['Critical','High','Medium','OK'].map(u => skus.filter(s => s.urgency === u).length), backgroundColor: ['#EF4444','#F59E0B','#10B981','#3B82F6'], borderWidth: 0, hoverOffset: 4 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{display:false}, tooltip:{callbacks:{label: ctx => ` ${ctx.label}: ${ctx.parsed}`}} } }
+  });
+
+  destroyChart('c2');
+  const c2cats = cats.slice(0, 9);
+  charts['c2'] = new Chart(document.getElementById('c2'), {
+    type: 'bar',
+    data: {
+      labels: c2cats.map(c => c.split(' ')[0]),
+      datasets: [
+        { label: 'Avg days left', data: c2cats.map(c => { const s=skus.filter(x=>x.cat===c); return s.length?Math.round(s.reduce((a,x)=>a+x.daysRemaining,0)/s.length):0; }), backgroundColor: '#3B82F6', borderWidth:0 },
+        { label: 'Avg lead time', data: c2cats.map(c => { const s=skus.filter(x=>x.cat===c); return s.length?Math.round(s.reduce((a,x)=>a+x.leadDays,0)/s.length):0; }), backgroundColor: '#F59E0B', borderWidth:0 }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}}}, plugins:{legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}}} }
+  });
+
+  destroyChart('c3');
+  charts['c3'] = new Chart(document.getElementById('c3'), {
+    type: 'bar',
+    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[{label:'Value K AED', data:cats.map(c=>Math.round(skus.filter(x=>x.cat===c).reduce((a,s)=>a+s.inventoryValue,0)/1000)), backgroundColor:'#06B6D4', borderWidth:0}] },
+    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{display:false}}}, plugins:{legend:{display:false}} }
+  });
+
+  destroyChart('c4');
+  charts['c4'] = new Chart(document.getElementById('c4'), {
+    type: 'bar',
+    data: { labels: cats.slice(0,9).map(c=>c.split(' ')[0]), datasets:[{label:'Below safety stock', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock<x.safetyStock).length), backgroundColor:'#EF4444', borderWidth:0}] },
+    options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}}}, plugins:{legend:{display:false}} }
+  });
+
+  destroyChart('c5');
+  charts['c5'] = new Chart(document.getElementById('c5'), {
+    type: 'bar',
+    data: {
+      labels: cats.slice(0,9).map(c=>c.split(' ')[0]),
+      datasets: [
+        { label:'Above target', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock>=x.targetStock).length), backgroundColor:'#10B981', borderWidth:0 },
+        { label:'Below target', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock< x.targetStock).length), backgroundColor:'#7F1D1D', borderWidth:0 }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true,ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{stacked:true,ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}}}, plugins:{legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}}} }
+  });
+}
+
+// ══════════════════════════════════════════════
+//  CRITICAL TABLE
+// ══════════════════════════════════════════════
+function renderCriticalTable(skus) {
+  const top = skus.filter(s => s.urgency === 'Critical')
+    .sort((a, b) => b.reorderValue - a.reorderValue)
+    .slice(0, ovCat ? 999 : 10);
+
+  if (!top.length) {
+    document.getElementById('criticalTable').innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-3);font-size:12px;">No critical items' + (ovCat ? ' in this category' : '') + '</div>';
+    return;
+  }
+
+  document.getElementById('criticalTable').innerHTML = `<table>
+    <thead><tr>
+      <th>SKU</th><th>Name</th><th>Category</th><th>Current</th><th>Safety Stock</th>
+      <th>Reorder Pt</th><th>Target</th><th>Days Left</th><th>Lead</th>
+      <th>Gap vs Target</th><th>EOQ</th><th>Reorder Qty</th><th>Reorder AED</th><th>ABC</th><th>Criticality</th><th>Supplier</th>
+    </tr></thead>
+    <tbody>
+    ${top.map(s => {
+      const ratio = s.daysRemaining / Math.max(1, s.leadDays);
+      return `<tr>
+        <td class="mono">${s.sku}</td>
+        <td>${s.name}</td>
+        <td style="color:var(--text-3);font-size:10px;">${s.cat}</td>
+        <td>${s.currentStock.toLocaleString()} ${s.unit}</td>
+        <td>${s.safetyStock.toLocaleString()}</td>
+        <td>${s.reorderPoint.toLocaleString()}</td>
+        <td>${s.targetStock.toLocaleString()}</td>
+        <td style="color:${ratio<1?'var(--red)':'var(--amber)'}">${s.daysRemaining}d</td>
+        <td>${s.leadDays}d</td>
+        <td>
+          <div class="bar-wrap">
+            <div class="bar-bg"><div class="bar-fill" style="width:${Math.min(100,Math.abs(s.stockGapPct))}%;background:${s.stockGapPct<0?'var(--red)':'var(--green)'}"></div></div>
+            <span style="font-size:10px;color:${s.stockGapPct<0?'var(--red)':'var(--green)'}">${s.stockGapPct.toFixed(0)}%</span>
+          </div>
+        </td>
+        <td style="color:var(--accent2);">${s.eoq.toLocaleString()}</td>
+        <td style="color:var(--text-1);">${s.reorderQty.toLocaleString()}</td>
+        <td style="color:var(--amber);">AED ${s.reorderValue.toLocaleString()}</td>
+        <td><span class="badge badge-${s.abcClass}">${s.abcClass}</span></td>
+        <td><span style="font-family:var(--font-mono);font-size:10px;color:${s.criticalityScore>=7?'var(--red)':s.criticalityScore>=4?'var(--amber)':'var(--green)'}">${s.criticalityScore.toFixed(1)}</span></td>
+        <td style="color:var(--text-3);font-size:10px;">${s.supplier}</td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+  </table>`;
+}
+
+// ══════════════════════════════════════════════
+//  URGENCY MATRIX
+// ══════════════════════════════════════════════
+let scatterChart = null;
+
+function applyUrgencyFilter() {
+  const catF   = document.getElementById('urgCatFilter').value;
+  const lvlF   = document.getElementById('urgLevelFilter').value;
+  const search = document.getElementById('urgSearch').value.toLowerCase();
+  let data = ALL_SKUS.filter(s =>
+    (!catF   || s.cat     === catF) &&
+    (!lvlF   || s.urgency === lvlF) &&
+    (!search || s.sku.toLowerCase().includes(search) || s.name.toLowerCase().includes(search))
+  );
+  document.getElementById('urgCount').textContent = data.length + ' SKUs shown';
+  renderUrgencyFilter(data);
+}
+
+function renderUrgencyFilter(data) {
+  if (!data) {
+    const catF   = document.getElementById('urgCatFilter').value;
+    const lvlF   = document.getElementById('urgLevelFilter').value;
+    const search = document.getElementById('urgSearch').value.toLowerCase();
+    data = ALL_SKUS.filter(s =>
+      (!catF   || s.cat     === catF) &&
+      (!lvlF   || s.urgency === lvlF) &&
+      (!search || s.sku.toLowerCase().includes(search) || s.name.toLowerCase().includes(search))
+    );
+  }
+  renderScatterChart(data);
+  renderUrgencyTable(data);
+}
+
+function renderScatterChart(data) {
+  if (scatterChart) { scatterChart.destroy(); scatterChart = null; }
+  const sample = data.length > 200 ? data.filter((_, i) => i % Math.ceil(data.length / 200) === 0) : data;
+  const byUrgency = { Critical: [], High: [], Medium: [], OK: [] };
+  sample.forEach(s => {
+    byUrgency[s.urgency].push({ x: s.leadDays, y: Math.min(s.daysRemaining, 90), r: Math.max(4, Math.min(16, Math.log(s.inventoryValue + 1) * 1.1)), _d: s });
+  });
+  scatterChart = new Chart(document.getElementById('scatterChart'), {
+    type: 'bubble',
+    data: { datasets: [
+      { label:'Critical', data:byUrgency.Critical, backgroundColor:'rgba(239,68,68,0.75)',  borderColor:'#B91C1C', borderWidth:1 },
+      { label:'High',     data:byUrgency.High,     backgroundColor:'rgba(245,158,11,0.75)', borderColor:'#92400E', borderWidth:1 },
+      { label:'Medium',   data:byUrgency.Medium,   backgroundColor:'rgba(16,185,129,0.65)', borderColor:'#065F46', borderWidth:1 },
+      { label:'OK',       data:byUrgency.OK,       backgroundColor:'rgba(59,130,246,0.55)', borderColor:'#1E40AF', borderWidth:1 },
+    ]},
+    options: { responsive:true, maintainAspectRatio:false,
+      scales: {
+        x: { title:{display:true,text:'Lead time (days)',color:'#5A6B8A',font:{size:10}}, ticks:{color:'#5A6B8A',font:{size:9}}, grid:{color:'rgba(99,130,183,0.08)'}, min:0, max:35 },
+        y: { title:{display:true,text:'Days of inventory remaining',color:'#5A6B8A',font:{size:10}}, ticks:{color:'#5A6B8A',font:{size:9}}, grid:{color:'rgba(99,130,183,0.08)'}, min:-5, max:95 }
+      },
+      plugins: { legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}}, tooltip:{callbacks:{label:ctx=>{ const d=ctx.raw._d; return d?[`${d.sku} — ${d.name}`,`Days left: ${d.daysRemaining}`,`Lead: ${d.leadDays}d`,`Gap: ${d.stockGapPct}%`]:[]; }}} }
+    }
+  });
+}
+
+function renderUrgencyTable(data) {
+  const sorted = [...data].sort((a, b) => {
+    const o = { Critical:0, High:1, Medium:2, OK:3 };
+    return o[a.urgency] - o[b.urgency] || b.reorderValue - a.reorderValue;
+  });
+  document.getElementById('tableCount').textContent = sorted.length + ' items';
+  const shown = sorted.slice(0, 100);
+  document.getElementById('urgencyTable').innerHTML = `<table>
+    <thead><tr>
+      <th>SKU</th><th>Name</th><th>Category</th>
+      <th>Current</th><th>Safety Stock</th><th>Reorder Pt</th><th>Target</th>
+      <th>Days Left</th><th>Lead</th><th>Days vs Lead</th><th>Urgency</th>
+    </tr></thead>
+    <tbody>
+    ${shown.map(s => {
+      const ratio = s.daysRemaining / Math.max(1, s.leadDays);
+      const barW  = Math.min(100, ratio * 20);
+      const barC  = ratio < 1 ? 'var(--red)' : ratio < 1.5 ? 'var(--amber)' : 'var(--green)';
+      return `<tr>
+        <td class="mono">${s.sku}</td>
+        <td>${s.name}</td>
+        <td style="color:var(--text-3);font-size:10px;">${s.cat}</td>
+        <td>${s.currentStock.toLocaleString()}</td>
+        <td>${s.safetyStock.toLocaleString()}</td>
+        <td>${s.reorderPoint.toLocaleString()}</td>
+        <td>${s.targetStock.toLocaleString()}</td>
+        <td style="color:${ratio<1?'var(--red)':ratio<1.5?'var(--amber)':'var(--green)'}">${s.daysRemaining}d</td>
+        <td>${s.leadDays}d</td>
+        <td>
+          <div class="bar-wrap">
+            <div class="bar-bg" style="width:80px;"><div class="bar-fill" style="width:${barW}%;background:${barC}"></div></div>
+            <span style="font-size:10px;color:${barC}">${ratio.toFixed(1)}×</span>
+          </div>
+        </td>
+        <td><span class="badge badge-${s.urgency}">${s.urgency}</span></td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+  </table>`;
+}
+
+// ══════════════════════════════════════════════
+//  SKU DETAIL TABLE  (extended)
+// ══════════════════════════════════════════════
+function renderSKUTable() {
+  const catF   = document.getElementById('skuCatF').value;
+  const urgF   = document.getElementById('skuUrgF').value;
+  const sort   = document.getElementById('skuSort').value;
+  const search = document.getElementById('skuSearchF').value.toLowerCase();
+
+  let data = ALL_SKUS.filter(s =>
+    (!catF   || s.cat     === catF) &&
+    (!urgF   || s.urgency === urgF) &&
+    (!search || s.sku.toLowerCase().includes(search) || s.name.toLowerCase().includes(search))
+  );
+
+  const urgOrder = { Critical:0, High:1, Medium:2, OK:3 };
+  if      (sort === 'urgency')     data.sort((a,b) => urgOrder[a.urgency] - urgOrder[b.urgency]);
+  else if (sort === 'value')       data.sort((a,b) => b.inventoryValue - a.inventoryValue);
+  else if (sort === 'days')        data.sort((a,b) => a.daysRemaining - b.daysRemaining);
+  else if (sort === 'gap')         data.sort((a,b) => a.stockGapPct - b.stockGapPct);
+  else if (sort === 'eoq')         data.sort((a,b) => b.eoq - a.eoq);
+  else if (sort === 'criticality') data.sort((a,b) => b.criticalityScore - a.criticalityScore);
+
+  document.getElementById('skuCount').textContent = data.length + ' SKUs';
+  const shown = data.slice(0, 100);
+
+  document.getElementById('skuTable').innerHTML = `<table>
+    <thead><tr>
+      <th>SKU</th><th>Name</th><th>Cat</th><th>Unit</th>
+      <th>Current</th><th>Safety Stock</th><th>Reorder Pt</th><th>Threshold</th><th>Target</th>
+      <th>Gap %</th><th>Daily Sales</th><th>Days Left</th><th>Lead</th>
+      <th>Reorder Qty</th><th>EOQ</th><th>Rec. Stock</th><th>Purchase Rec. Qty</th>
+      <th>Reorder AED</th><th>Inv. Value</th><th>ABC</th><th>Criticality</th><th>Supplier</th><th>Urgency</th>
+    </tr></thead>
+    <tbody>
+    ${shown.map(s => `<tr>
+      <td class="mono">${s.sku}</td>
+      <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;">${s.name}</td>
+      <td style="color:var(--text-3);font-size:10px;">${s.cat.split(' ')[0]}</td>
+      <td style="color:var(--text-3);font-size:10px;">${s.unit}</td>
+      <td>${s.currentStock.toLocaleString()}</td>
+      <td>${s.safetyStock.toLocaleString()}</td>
+      <td>${s.reorderPoint.toLocaleString()}</td>
+      <td>${s.thresholdPoint.toLocaleString()}</td>
+      <td>${s.targetStock.toLocaleString()}</td>
+      <td style="color:${s.stockGapPct<-15?'var(--red)':s.stockGapPct<0?'var(--amber)':'var(--green)'}">${s.stockGapPct.toFixed(0)}%</td>
+      <td>${s.avgDailySales}</td>
+      <td style="color:${s.daysRemaining<s.leadDays?'var(--red)':'var(--text-2)'}">${s.daysRemaining}d</td>
+      <td>${s.leadDays}d</td>
+      <td>${s.reorderQty.toLocaleString()}</td>
+      <td style="color:var(--accent2);">${s.eoq.toLocaleString()}</td>
+      <td>${s.recommendedStock.toLocaleString()}</td>
+      <td style="color:${s.purchaseRecommendationQty>0?'var(--amber)':'var(--green)'};">${s.purchaseRecommendationQty.toLocaleString()}</td>
+      <td style="color:var(--amber);">${s.reorderValue.toLocaleString()}</td>
+      <td>${s.inventoryValue.toLocaleString()}</td>
+      <td><span class="badge badge-${s.abcClass}">${s.abcClass}</span></td>
+      <td style="font-family:var(--font-mono);font-size:10px;color:${s.criticalityScore>=7?'var(--red)':s.criticalityScore>=4?'var(--amber)':'var(--green)'}">${s.criticalityScore.toFixed(1)}</td>
+      <td style="color:var(--text-3);font-size:10px;">${s.supplier}</td>
+      <td><span class="badge badge-${s.urgency}">${s.urgency}</span></td>
+    </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+// ══════════════════════════════════════════════
+//  ADVANCED ANALYTICS TAB
+// ══════════════════════════════════════════════
+function getAdvData() {
+  const cat = document.getElementById('advCatFilter').value;
+  const sup = document.getElementById('advSupFilter').value;
+  return ALL_SKUS.filter(s => (!cat || s.cat === sup || s.cat === cat) && (!sup || s.supplier === sup));
+}
+
+function avg(arr, fn) {
+  if (!arr.length) return 0;
+  return arr.reduce((a, x) => a + fn(x), 0) / arr.length;
+}
+function sum(arr, fn) { return arr.reduce((a, x) => a + fn(x), 0); }
+
+function renderAdvanced() {
+  const skus = getAdvData();
+  document.getElementById('advCount').textContent = skus.length + ' SKUs';
+
+  const cats = [...new Set(ALL_SKUS.map(s => s.cat))].sort();
+
+  // ── Efficiency Metrics ─────────────────────────────────────────
+  const avgTurnover = Math.round(avg(skus, s => s.invTurnoverMonth) * 100) / 100;
+  const avgDIO      = Math.round(avg(skus, s => s.dio) * 10) / 10;
+  const avgInvLevel = Math.round(avg(skus, s => s.avgInventoryLevelUnits));
+  const totalInvVal = sum(skus, s => s.inventoryValue);
+  const obsoleteVal = sum(skus, s => s.obsoleteValue);
+
+  document.getElementById('effMetrics').innerHTML = [
+    { label: 'Inv. Turnover / Month', val: avgTurnover.toFixed(2)+'×', sub: 'Portfolio avg', cls: '', formula: 'Monthly Demand / Avg Inventory' },
+    { label: 'Days of Inv. Outstanding', val: avgDIO.toFixed(1)+' d', sub: 'Portfolio avg', cls: avgDIO > 60 ? 'kpi-red' : avgDIO > 30 ? 'kpi-amber' : 'kpi-green', formula: 'Avg Inv. Value / Daily COGS' },
+    { label: 'Avg Inventory Level', val: avgInvLevel.toLocaleString(), sub: 'Units, portfolio avg', cls: '', formula: '(Max Stock + Safety Stock) / 2' },
+    { label: 'Total Inventory Value', val: 'AED '+Math.round(totalInvVal/1000)+'K', sub: 'All active SKUs', cls: '', formula: 'Σ (Current Stock × Unit Cost)' },
+    { label: 'Obsolete Inventory', val: 'AED '+Math.round(obsoleteVal/1000)+'K', sub: sum(skus, s=>s.obsoleteUnits).toLocaleString()+' units', cls: obsoleteVal>0?'kpi-amber':'kpi-green', formula: 'Σ (Obsolete Units × Unit Cost)' },
+  ].map(k => `<div class="metric-card"><div class="metric-label">${k.label}</div><div class="metric-val ${k.cls}">${k.val}</div><div class="metric-sub">${k.sub}</div><div class="metric-formula">${k.formula}</div></div>`).join('');
+
+  destroyChart('advC1');
+  charts['advC1'] = new Chart(document.getElementById('advC1'), {
+    type: 'bar',
+    data: { labels: cats.map(c=>c.split(' ')[0]), datasets: [{ label:'Turnover/Month', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>s.invTurnoverMonth)*100)/100), backgroundColor:'#3B82F6', borderWidth:0 }] },
+    options: chartOpts('Turnover ×')
+  });
+
+  destroyChart('advC2');
+  charts['advC2'] = new Chart(document.getElementById('advC2'), {
+    type: 'bar',
+    data: { labels: cats.map(c=>c.split(' ')[0]), datasets: [{ label:'DIO (days)', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>Math.min(s.dio,120))*10)/10), backgroundColor:'#06B6D4', borderWidth:0 }] },
+    options: chartOpts('Days')
+  });
+
+  // ── Accuracy Metrics ───────────────────────────────────────────
+  const avgAccMonth = Math.round(avg(skus, s=>s.invAccuracyMonthPct)*100)/100;
+  const avgAccYear  = Math.round(avg(skus, s=>s.invAccuracyYearPct)*100)/100;
+  const avgCycle    = Math.round(avg(skus, s=>s.cycleCountAccuracyPct)*100)/100;
+  const avgShrink   = Math.round(avg(skus, s=>s.shrinkagePct)*100)/100;
+  const avgObsPct   = Math.round(avg(skus, s=>s.obsoletePct)*100)/100;
+
+  document.getElementById('accMetrics').innerHTML = [
+    { label: 'Inv. Accuracy / Month', val: avgAccMonth.toFixed(1)+'%', sub: 'Counted vs system', cls: avgAccMonth<95?'kpi-red':avgAccMonth<98?'kpi-amber':'kpi-green', formula: '1 − |Counted−System| / System' },
+    { label: 'Inv. Accuracy / Year',  val: avgAccYear.toFixed(1)+'%',  sub: 'Rolling 12-month', cls: avgAccYear<95?'kpi-red':avgAccYear<98?'kpi-amber':'kpi-green', formula: 'Annualised from monthly count' },
+    { label: 'Cycle Count Accuracy',  val: avgCycle.toFixed(1)+'%',    sub: 'Physical vs system', cls: avgCycle<95?'kpi-red':avgCycle<98?'kpi-amber':'kpi-green', formula: 'Based on most recent cycle count' },
+    { label: 'Shrinkage Rate / Month',val: avgShrink.toFixed(2)+'%',   sub: 'Avg across SKUs', cls: avgShrink>2?'kpi-red':avgShrink>1?'kpi-amber':'kpi-green', formula: 'Shrinkage Units / Monthly Demand' },
+    { label: 'Avg Obsolete %',        val: avgObsPct.toFixed(1)+'%',   sub: 'Of current stock', cls: avgObsPct>10?'kpi-red':avgObsPct>5?'kpi-amber':'kpi-green', formula: 'Obsolete Units / Current Stock' },
+  ].map(k => `<div class="metric-card"><div class="metric-label">${k.label}</div><div class="metric-val ${k.cls}">${k.val}</div><div class="metric-sub">${k.sub}</div><div class="metric-formula">${k.formula}</div></div>`).join('');
+
+  destroyChart('advC3');
+  charts['advC3'] = new Chart(document.getElementById('advC3'), {
+    type: 'bar',
+    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[{ label:'Accuracy %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct)*100)/100), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct); return v<95?'#EF4444':v<98?'#F59E0B':'#10B981'; }), borderWidth:0 }] },
+    options: chartOpts('%', {min:90, max:100})
+  });
+
+  destroyChart('advC4');
+  charts['advC4'] = new Chart(document.getElementById('advC4'), {
+    type: 'bar',
+    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[
+      { label:'Shrinkage %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.shrinkagePct)*100)/100), backgroundColor:'#EF4444', borderWidth:0 },
+      { label:'Obsolete %',  data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.obsoletePct)*100)/100),  backgroundColor:'#8B5CF6', borderWidth:0 }
+    ]},
+    options: chartOpts('%')
+  });
+
+  // ── Service Level Metrics ──────────────────────────────────────
+  const avgStockoutRate  = Math.round(avg(skus, s=>s.stockoutRatePct)*100)/100;
+  const avgBackorderRate = Math.round(avg(skus, s=>s.backorderRatePct)*100)/100;
+  const avgFillRate      = Math.round(avg(skus, s=>s.orderFillRatePct)*100)/100;
+  const avgReturnRate    = Math.round(avg(skus, s=>s.returnRatePct)*100)/100;
+  const totalStockouts   = sum(skus, s=>s.stockoutFrequency);
+
+  document.getElementById('svcMetrics').innerHTML = [
+    { label: 'Stockout Rate / Month',   val: avgStockoutRate.toFixed(1)+'%',  sub: 'Events / total orders', cls: avgStockoutRate>5?'kpi-red':avgStockoutRate>2?'kpi-amber':'kpi-green', formula: 'Stockouts / Total Orders × 100' },
+    { label: 'Backorder Rate / Month',  val: avgBackorderRate.toFixed(1)+'%', sub: 'Avg across SKUs', cls: avgBackorderRate>5?'kpi-red':avgBackorderRate>2?'kpi-amber':'kpi-green', formula: 'Backorders / Total Orders × 100' },
+    { label: 'Order Fill Rate / Month', val: avgFillRate.toFixed(1)+'%',      sub: 'Lines fulfilled', cls: avgFillRate<90?'kpi-red':avgFillRate<95?'kpi-amber':'kpi-green', formula: 'Filled Orders / Total Orders × 100' },
+    { label: 'Return Rate / Month',     val: avgReturnRate.toFixed(1)+'%',    sub: 'Returned / demand', cls: avgReturnRate>5?'kpi-red':avgReturnRate>2?'kpi-amber':'kpi-green', formula: 'Returned Units / Monthly Demand' },
+    { label: 'Total Stockout Events',   val: totalStockouts.toLocaleString(), sub: 'Portfolio last 30d', cls: totalStockouts>100?'kpi-red':totalStockouts>50?'kpi-amber':'kpi-green', formula: 'Σ Stockout Events all SKUs' },
+  ].map(k => `<div class="metric-card"><div class="metric-label">${k.label}</div><div class="metric-val ${k.cls}">${k.val}</div><div class="metric-sub">${k.sub}</div><div class="metric-formula">${k.formula}</div></div>`).join('');
+
+  destroyChart('advC5');
+  charts['advC5'] = new Chart(document.getElementById('advC5'), {
+    type: 'bar',
+    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[
+      { label:'Stockout %',  data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.stockoutRatePct)*100)/100),  backgroundColor:'#EF4444', borderWidth:0 },
+      { label:'Backorder %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.backorderRatePct)*100)/100), backgroundColor:'#F59E0B', borderWidth:0 }
+    ]},
+    options: chartOpts('%')
+  });
+
+  destroyChart('advC6');
+  charts['advC6'] = new Chart(document.getElementById('advC6'), {
+    type: 'bar',
+    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[
+      { label:'Fill Rate %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.orderFillRatePct)*100)/100),backgroundColor:'#10B981', borderWidth:0 },
+      { label:'Return Rate %',data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.returnRatePct)*100)/100),  backgroundColor:'#06B6D4', borderWidth:0 }
+    ]},
+    options: chartOpts('%')
+  });
+
+  // ── Procurement Metrics ────────────────────────────────────────
+  const avgEOQ        = Math.round(avg(skus, s=>s.eoq));
+  const avgSSAdv      = Math.round(avg(skus, s=>s.safetyStockAdv));
+  const avgROP        = Math.round(avg(skus, s=>s.reorderPoint));
+  const totalPurchRec = sum(skus, s=>s.purchaseRecommendationQty * s.unitCost);
+  const skusNeedPurch = skus.filter(s=>s.purchaseRecommendationQty > 0).length;
+
+  document.getElementById('procMetrics').innerHTML = [
+    { label: 'Avg EOQ',                 val: avgEOQ.toLocaleString(),              sub: 'Units per order', cls: '', formula: '√(2 × Annual Demand × Order Cost / Holding Cost)' },
+    { label: 'Avg Safety Stock (Adv.)', val: avgSSAdv.toLocaleString()+' units',   sub: 'Z=1.645 (95% SL)', cls: '', formula: 'Z × σ_demand × √Lead Time' },
+    { label: 'Avg Reorder Point',       val: avgROP.toLocaleString()+' units',     sub: 'Trigger point', cls: '', formula: '(Avg Demand × Lead Days) + Safety Stock' },
+    { label: 'Purchase Rec. Value',     val: 'AED '+Math.round(totalPurchRec/1000)+'K', sub: skusNeedPurch+' SKUs need ordering', cls: skusNeedPurch>100?'kpi-amber':'kpi-green', formula: 'Σ Rec. Qty × Unit Cost' },
+    { label: 'SKUs Below ROP',          val: skus.filter(s=>s.currentStock<s.reorderPoint).length.toLocaleString(), sub: 'Trigger reorder now', cls: 'kpi-red', formula: 'Current Stock < ROP' },
+  ].map(k => `<div class="metric-card"><div class="metric-label">${k.label}</div><div class="metric-val ${k.cls}">${k.val}</div><div class="metric-sub">${k.sub}</div><div class="metric-formula">${k.formula}</div></div>`).join('');
+
+  const sups = [...new Set(ALL_SKUS.map(s=>s.supplier))].sort();
+  destroyChart('advC7');
+  charts['advC7'] = new Chart(document.getElementById('advC7'), {
+    type: 'bar',
+    data: { labels: sups.map(s=>s.split(' ')[0]), datasets:[
+      { label:'Avg EOQ',         data:sups.map(s=>Math.round(avg(skus.filter(x=>x.supplier===s),x=>x.eoq))), backgroundColor:'#3B82F6', borderWidth:0 },
+      { label:'Avg Reorder Qty', data:sups.map(s=>Math.round(avg(skus.filter(x=>x.supplier===s),x=>x.reorderQty))), backgroundColor:'#F59E0B', borderWidth:0 }
+    ]},
+    options: chartOpts('Units')
+  });
+
+  destroyChart('advC8');
+  charts['advC8'] = new Chart(document.getElementById('advC8'), {
+    type: 'bar',
+    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[
+      { label:'Safety Stock (simple)', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.safetyStock))), backgroundColor:'#10B981', borderWidth:0 },
+      { label:'Safety Stock (Z-score)', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.safetyStockAdv))), backgroundColor:'#3B82F6', borderWidth:0 }
+    ]},
+    options: chartOpts('Units')
+  });
+
+  // ── ABC & Criticality ─────────────────────────────────────────
+  const aCount = skus.filter(s=>s.abcClass==='A').length;
+  const bCount = skus.filter(s=>s.abcClass==='B').length;
+  const cCount = skus.filter(s=>s.abcClass==='C').length;
+
+  destroyChart('advC9');
+  charts['advC9'] = new Chart(document.getElementById('advC9'), {
+    type: 'doughnut',
+    data: { labels:['A — High Value','B — Medium','C — Low Value'], datasets:[{ data:[aCount,bCount,cCount], backgroundColor:['#EF4444','#F59E0B','#3B82F6'], borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{ legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}} } }
+  });
+
+  const scoreRanges = { '1-2':0, '3-4':0, '5-6':0, '7-8':0, '9-10':0 };
+  skus.forEach(s => {
+    const sc = s.criticalityScore;
+    if      (sc <= 2) scoreRanges['1-2']++;
+    else if (sc <= 4) scoreRanges['3-4']++;
+    else if (sc <= 6) scoreRanges['5-6']++;
+    else if (sc <= 8) scoreRanges['7-8']++;
+    else              scoreRanges['9-10']++;
+  });
+
+  destroyChart('advC10');
+  charts['advC10'] = new Chart(document.getElementById('advC10'), {
+    type: 'bar',
+    data: { labels:Object.keys(scoreRanges), datasets:[{ label:'SKUs', data:Object.values(scoreRanges), backgroundColor:['#10B981','#10B981','#F59E0B','#EF4444','#EF4444'], borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:10}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}}}, plugins:{legend:{display:false}} }
+  });
+
+  destroyChart('advC11');
+  charts['advC11'] = new Chart(document.getElementById('advC11'), {
+    type: 'bar',
+    data: { labels:cats.map(c=>c.split(' ')[0]), datasets:[{ label:'Avg Criticality Score', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore)*10)/10), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore); return v>=7?'#EF4444':v>=4?'#F59E0B':'#10B981'; }), borderWidth:0 }] },
+    options: chartOpts('Score', {min:0, max:10})
+  });
+
+  renderAdvTable();
+}
+
+// ── Reusable chart options helper ─────────────────────────────
+function chartOpts(yLabel, extra = {}) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      x: { ticks:{color:'#5A6B8A',font:{size:9}}, grid:{color:'rgba(99,130,183,0.08)'} },
+      y: { ...extra, title:{display:true,text:yLabel,color:'#5A6B8A',font:{size:9}}, ticks:{color:'#5A6B8A',font:{size:9}}, grid:{color:'rgba(99,130,183,0.08)'} }
+    },
+    plugins: { legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}} }
+  };
+}
+
+// ── Advanced SKU Table ─────────────────────────────────────────
+function renderAdvTable() {
+  const view   = document.getElementById('advTableView').value;
+  const search = document.getElementById('advSearchF').value.toLowerCase();
+  const skus   = getAdvData().filter(s => !search || s.sku.toLowerCase().includes(search) || s.name.toLowerCase().includes(search));
+
+  document.getElementById('advTableCount').textContent = skus.length + ' SKUs';
+
+  const cols = {
+    efficiency: [
+      ['SKU','sku','mono'], ['Name','name'], ['Category','cat','text-3'], ['Unit','unit','text-3'],
+      ['Inv. Turnover/Mo','invTurnoverMonth','accent2','x'], ['DIO (days)','dio','text-2','d'],
+      ['Avg Inv. Level','avgInventoryLevelUnits','text-2'], ['Inv. Value AED','inventoryValue','amber'],
+      ['Obsolete Units','obsoleteUnits','text-2'], ['Obsolete Value AED','obsoleteValue','purple']
+    ],
+    accuracy: [
+      ['SKU','sku','mono'], ['Name','name'], ['Category','cat','text-3'],
+      ['System Qty','systemQty','text-2'], ['Counted Qty','countedQty','text-2'],
+      ['Acc. / Month %','invAccuracyMonthPct','acc'], ['Acc. / Year %','invAccuracyYearPct','acc'],
+      ['Cycle Count %','cycleCountAccuracyPct','acc'],
+      ['Shrinkage Units','shrinkageUnits','text-2'], ['Shrinkage %','shrinkagePct','shrink']
+    ],
+    service: [
+      ['SKU','sku','mono'], ['Name','name'], ['Category','cat','text-3'],
+      ['Stockouts/Mo','stockoutFrequency','text-2'], ['Stockout Rate %','stockoutRatePct','svc'],
+      ['Backorders/Mo','backoredersLastMonth','text-2'], ['Backorder Rate %','backorderRatePct','svc'],
+      ['Fill Rate %','orderFillRatePct','fill'],
+      ['Returns/Mo','returnedUnits','text-2'], ['Return Rate %','returnRatePct','text-2']
+    ],
+    procurement: [
+      ['SKU','sku','mono'], ['Name','name'], ['Category','cat','text-3'], ['Supplier','supplier','text-3'],
+      ['Safety Stock (Simple)','safetyStock','text-2'], ['Safety Stock (Z)','safetyStockAdv','accent2'],
+      ['ROP','reorderPoint','text-1'], ['EOQ','eoq','accent2'],
+      ['Rec. Stock','recommendedStock','text-2'], ['Purchase Rec. Qty','purchaseRecommendationQty','amber'],
+      ['Stock Coverage (d)','stockCoverageDays','text-2']
+    ],
+    classification: [
+      ['SKU','sku','mono'], ['Name','name'], ['Category','cat','text-3'], ['Supplier','supplier','text-3'],
+      ['Inv. Value AED','inventoryValue','text-2'], ['ABC Class','abcClass','badge'],
+      ['Criticality Score','criticalityScore','score'], ['Criticality','criticality','badge2'],
+      ['Urgency','urgency','badgeU'], ['Stockout Freq.','stockoutFrequency','text-2']
+    ]
+  };
+
+  const headers = cols[view];
+  const sorted  = [...skus].sort((a, b) => b.inventoryValue - a.inventoryValue);
+  const shown   = sorted.slice(0, 100);
+
+  const renderCell = (s, col) => {
+    const [label, field, style] = col;
+    const val = s[field];
+    if (style === 'mono')   return `<td class="mono">${val}</td>`;
+    if (style === 'text-3') return `<td style="color:var(--text-3);font-size:10px;">${val}</td>`;
+    if (style === 'text-1') return `<td style="color:var(--text-1);">${typeof val==='number'?val.toLocaleString():val}</td>`;
+    if (style === 'amber')  return `<td style="color:var(--amber);">${typeof val==='number'?val.toLocaleString():val}</td>`;
+    if (style === 'accent2')return `<td style="color:var(--accent2);">${typeof val==='number'?val.toLocaleString():val}</td>`;
+    if (style === 'purple') return `<td style="color:var(--purple);">${typeof val==='number'?val.toLocaleString():val}</td>`;
+    if (style === 'badge')  return `<td><span class="badge badge-${val}">${val}</span></td>`;
+    if (style === 'badge2') return `<td><span class="badge badge-${val==='Critical'?'Critical2':'Non-Critical'}">${val}</span></td>`;
+    if (style === 'badgeU') return `<td><span class="badge badge-${val}">${val}</span></td>`;
+    if (style === 'acc') {
+      const c = val < 95 ? 'var(--red)' : val < 98 ? 'var(--amber)' : 'var(--green)';
+      return `<td style="color:${c};">${typeof val==='number'?val.toFixed(1)+'%':val}</td>`;
+    }
+    if (style === 'shrink') {
+      const c = val > 2 ? 'var(--red)' : val > 1 ? 'var(--amber)' : 'var(--green)';
+      return `<td style="color:${c};">${typeof val==='number'?val.toFixed(2)+'%':val}</td>`;
+    }
+    if (style === 'svc') {
+      const c = val > 5 ? 'var(--red)' : val > 2 ? 'var(--amber)' : 'var(--green)';
+      return `<td style="color:${c};">${typeof val==='number'?val.toFixed(1)+'%':val}</td>`;
+    }
+    if (style === 'fill') {
+      const c = val < 90 ? 'var(--red)' : val < 95 ? 'var(--amber)' : 'var(--green)';
+      return `<td style="color:${c};">${typeof val==='number'?val.toFixed(1)+'%':val}</td>`;
+    }
+    if (style === 'score') {
+      const c = val >= 7 ? 'var(--red)' : val >= 4 ? 'var(--amber)' : 'var(--green)';
+      return `<td style="font-family:var(--font-mono);font-size:10px;color:${c};">${typeof val==='number'?val.toFixed(1):val}</td>`;
+    }
+    if (style === 'x') return `<td style="color:var(--accent2);">${typeof val==='number'?val.toFixed(2)+'×':val}</td>`;
+    if (style === 'd') return `<td style="color:var(--text-2);">${typeof val==='number'?val.toFixed(1)+'d':val}</td>`;
+    return `<td style="color:var(--text-2);">${typeof val==='number'?val.toLocaleString():val}</td>`;
+  };
+
+  document.getElementById('advTable').innerHTML = `<table>
+    <thead><tr>${headers.map(h => `<th>${h[0]}</th>`).join('')}</tr></thead>
+    <tbody>${shown.map(s => `<tr>${headers.map(col => renderCell(s, col)).join('')}</tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// ══════════════════════════════════════════════
+//  ADVANCED EXPORT
+// ══════════════════════════════════════════════
+function exportAdvanced(format) {
+  const skus = getAdvData();
+  const rows = skus.map(s => ({
+    SKU: s.sku, Name: s.name, Category: s.cat, Unit: s.unit, Supplier: s.supplier,
+    // Core
+    'Current Stock': s.currentStock, 'Unit Cost AED': s.unitCost,
+    'Inventory Value AED': s.inventoryValue,
+    // Efficiency
+    'Inv Turnover / Month': s.invTurnoverMonth,
+    'Days of Inv Outstanding': s.dio,
+    'Avg Inventory Level (units)': s.avgInventoryLevelUnits,
+    // Stock levels
+    'Safety Stock (Simple)': s.safetyStock,
+    'Safety Stock (Z-Score 95%)': s.safetyStockAdv,
+    'Reorder Point': s.reorderPoint,
+    'Target Stock': s.targetStock,
+    'Recommended Stock': s.recommendedStock,
+    'Purchase Recommendation Qty': s.purchaseRecommendationQty,
+    'EOQ': s.eoq,
+    'Stock Coverage Days': s.stockCoverageDays,
+    // Accuracy
+    'System Qty': s.systemQty, 'Counted Qty': s.countedQty,
+    'Inventory Accuracy % (Monthly)': s.invAccuracyMonthPct,
+    'Inventory Accuracy % (Yearly)': s.invAccuracyYearPct,
+    'Cycle Count Accuracy %': s.cycleCountAccuracyPct,
+    // Shrinkage & Obsolete
+    'Shrinkage Units / Month': s.shrinkageUnits,
+    'Shrinkage Rate %': s.shrinkagePct,
+    'Obsolete Units': s.obsoleteUnits, 'Obsolete Value AED': s.obsoleteValue, 'Obsolete %': s.obsoletePct,
+    // Service
+    'Stockout Events / Month': s.stockoutFrequency,
+    'Stockout Rate %': s.stockoutRatePct,
+    'Backorders / Month': s.backoredersLastMonth,
+    'Backorder Rate %': s.backorderRatePct,
+    'Order Fill Rate %': s.orderFillRatePct,
+    'Returns / Month': s.returnedUnits, 'Return Value AED': s.returnValue, 'Return Rate %': s.returnRatePct,
+    // Classification
+    'ABC Class': s.abcClass,
+    'Criticality Score': s.criticalityScore,
+    'Criticality': s.criticality,
+    'Urgency': s.urgency
+  }));
+
+  if (format === 'csv') {
+    const headers = Object.keys(rows[0]);
+    const csv = [headers.join(','), ...rows.map(r => headers.map(h => JSON.stringify(r[h] ?? '')).join(','))].join('\n');
+    downloadFile(new Blob([csv], { type: 'text/csv' }), `inventory_advanced_${today()}.csv`);
+  } else {
+    if (!window.XLSX) { alert('XLSX library not loaded'); return; }
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Advanced Analytics');
+    // Add summary sheet
+    const cats = [...new Set(ALL_SKUS.map(s=>s.cat))].sort();
+    const summary = cats.map(c => {
+      const cs = skus.filter(s=>s.cat===c);
+      return {
+        Category: c,
+        'SKU Count': cs.length,
+        'Avg Turnover/Mo': Math.round(avg(cs,s=>s.invTurnoverMonth)*100)/100,
+        'Avg DIO (days)': Math.round(avg(cs,s=>s.dio)*10)/10,
+        'Avg Accuracy %': Math.round(avg(cs,s=>s.invAccuracyMonthPct)*100)/100,
+        'Avg Stockout Rate %': Math.round(avg(cs,s=>s.stockoutRatePct)*100)/100,
+        'Avg Fill Rate %': Math.round(avg(cs,s=>s.orderFillRatePct)*100)/100,
+        'Total Obsolete Value AED': Math.round(sum(cs,s=>s.obsoleteValue)),
+        'Avg Criticality Score': Math.round(avg(cs,s=>s.criticalityScore)*10)/10,
+        'SKUs Below ROP': cs.filter(s=>s.currentStock<s.reorderPoint).length
+      };
+    });
+    const ws2 = XLSX.utils.json_to_sheet(summary);
+    XLSX.utils.book_append_sheet(wb, ws2, 'Category Summary');
+    XLSX.writeFile(wb, `inventory_advanced_${today()}.xlsx`);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  AI SIDEBAR CHARTS
+// ══════════════════════════════════════════════
+function renderAICharts() {
+  const cats = [...new Set(ALL_SKUS.map(s => s.cat))].sort();
+
+  destroyChart('aiChart1');
+  charts['aiChart1'] = new Chart(document.getElementById('aiChart1'), {
+    type: 'bar',
+    data: { labels: cats.slice(0,8).map(c=>c.split(' ')[0]), datasets:[{ label:'K AED', data:cats.slice(0,8).map(c=>Math.round(ALL_SKUS.filter(s=>s.cat===c&&(s.urgency==='Critical'||s.urgency==='High')).reduce((a,s)=>a+s.reorderValue,0)/1000)), backgroundColor:'#3B82F6', borderWidth:0 }] },
+    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{display:false}}}, plugins:{legend:{display:false}} }
+  });
+
+  const gapSevere = ALL_SKUS.filter(s=>s.stockGapPct<-30).length;
+  const gapHigh   = ALL_SKUS.filter(s=>s.stockGapPct>=-30&&s.stockGapPct<-15).length;
+  const gapMild   = ALL_SKUS.filter(s=>s.stockGapPct>=-15&&s.stockGapPct<0).length;
+  const gapOk     = ALL_SKUS.filter(s=>s.stockGapPct>=0).length;
+
+  destroyChart('aiChart2');
+  charts['aiChart2'] = new Chart(document.getElementById('aiChart2'), {
+    type: 'doughnut',
+    data: { labels:['Severe <-30%','High -30 to -15%','Mild 0 to -15%','At/Above target'], datasets:[{data:[gapSevere,gapHigh,gapMild,gapOk], backgroundColor:['#EF4444','#F59E0B','#10B981','#3B82F6'], borderWidth:0}] },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{legend:{display:false}} }
+  });
+}
+
+// ══════════════════════════════════════════════
+//  EXPORT (original)
+// ══════════════════════════════════════════════
+function exportData(format, scope) {
+  const data = scope === 'critical'
+    ? (ovCat ? ALL_SKUS.filter(s=>s.cat===ovCat&&s.urgency==='Critical') : ALL_SKUS.filter(s=>s.urgency==='Critical'))
+    : ALL_SKUS;
+
+  const rows = data.map(s => ({
+    SKU: s.sku, Name: s.name, Category: s.cat, Unit: s.unit,
+    'Current Stock': s.currentStock, 'Safety Stock': s.safetyStock,
+    'Reorder Point': s.reorderPoint, 'Threshold': s.thresholdPoint,
+    'Target Stock': s.targetStock, 'Recommended Stock': s.recommendedStock,
+    'Purchase Rec. Qty': s.purchaseRecommendationQty,
+    'Stock Gap %': s.stockGapPct, 'Avg Daily Sales': s.avgDailySales,
+    'Days Remaining': s.daysRemaining, 'Lead Days': s.leadDays,
+    'Reorder Qty': s.reorderQty, 'EOQ': s.eoq,
+    'Reorder Value AED': s.reorderValue, 'Inventory Value AED': s.inventoryValue,
+    'Unit Cost AED': s.unitCost, 'ABC Class': s.abcClass,
+    'Criticality Score': s.criticalityScore, Supplier: s.supplier, Urgency: s.urgency
+  }));
+
+  if (format === 'csv') {
+    const headers = Object.keys(rows[0]);
+    const csv = [headers.join(','), ...rows.map(r => headers.map(h => JSON.stringify(r[h]??'')).join(','))].join('\n');
+    downloadFile(new Blob([csv], { type: 'text/csv' }), `inventory_${scope}_${today()}.csv`);
+  } else if (format === 'excel') {
+    if (!window.XLSX) { alert('XLSX library not loaded'); return; }
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Inventory');
+    XLSX.writeFile(wb, `inventory_${scope}_${today()}.xlsx`);
+  } else if (format === 'pdf') {
+    const win = window.open('', '_blank');
+    const table = `<table border="1" cellpadding="4" style="border-collapse:collapse;font-size:10px;font-family:sans-serif;">
+      <thead><tr style="background:#1a2236;color:white;">${Object.keys(rows[0]).map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(r=>`<tr>${Object.values(r).map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`;
+    win.document.write(`<!DOCTYPE html><html><head><title>Inventory Export</title><style>body{margin:12px;}</style></head><body>
+      <h2 style="font-family:sans-serif;">Inventory Report — ${scope==='critical'?'Critical Items':'All SKUs'} — ${today()}</h2>
+      ${table}</body></html>`);
+    win.document.close();
+    setTimeout(() => win.print(), 500);
+  }
+}
+
+function today() { return new Date().toISOString().split('T')[0]; }
+function downloadFile(blob, filename) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
+// ══════════════════════════════════════════════
+//  DATA IMPORT — FILE
+// ══════════════════════════════════════════════
+function handleFileDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').style.borderColor = '';
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+}
+
+function handleFileImport(e) {
+  const file = e.target.files[0];
+  if (file) processFile(file);
+}
+
+function processFile(file) {
+  document.getElementById('fileStatus').textContent = 'Processing ' + file.name + '...';
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  if (ext === 'json') {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const raw = JSON.parse(ev.target.result);
+        const arr = Array.isArray(raw) ? raw : (raw.data || raw.inventory || raw.skus || Object.values(raw));
+        ALL_SKUS = calcABC(calcKPIs(arr));
+        window.INVENTORY_DATA = arr;
+        document.getElementById('fileStatus').textContent = `✓ Loaded ${ALL_SKUS.length} SKUs from ${file.name}`;
+        onDataLoaded(file.name);
+        document.getElementById('dataModal').style.display = 'none';
+      } catch(err) { document.getElementById('fileStatus').textContent = '✗ JSON parse error: ' + err.message; }
+    };
+    reader.readAsText(file);
+  } else if (ext === 'csv') {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const rows = parseCSV(ev.target.result);
+        ALL_SKUS = calcABC(calcKPIs(rows));
+        window.INVENTORY_DATA = rows;
+        document.getElementById('fileStatus').textContent = `✓ Loaded ${ALL_SKUS.length} SKUs from ${file.name}`;
+        onDataLoaded(file.name);
+        document.getElementById('dataModal').style.display = 'none';
+      } catch(err) { document.getElementById('fileStatus').textContent = '✗ CSV error: ' + err.message; }
+    };
+    reader.readAsText(file);
+  } else if (ext === 'xlsx' || ext === 'xls') {
+    if (!window.XLSX) { document.getElementById('fileStatus').textContent = '✗ XLSX library not loaded'; return; }
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const wb = XLSX.read(ev.target.result, { type:'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const raw = XLSX.utils.sheet_to_json(ws);
+        ALL_SKUS = calcABC(calcKPIs(raw));
+        window.INVENTORY_DATA = raw;
+        document.getElementById('fileStatus').textContent = `✓ Loaded ${ALL_SKUS.length} SKUs from ${file.name}`;
+        onDataLoaded(file.name);
+        document.getElementById('dataModal').style.display = 'none';
+      } catch(err) { document.getElementById('fileStatus').textContent = '✗ Excel error: ' + err.message; }
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    document.getElementById('fileStatus').textContent = '✗ Unsupported format. Use CSV, XLSX, or JSON.';
+  }
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,''));
+  return lines.slice(1).map(line => {
+    const vals = line.split(',').map(v => v.trim().replace(/"/g,''));
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = isNaN(vals[i]) ? vals[i] : +vals[i]; });
+    return obj;
+  }).filter(r => r.sku || r.SKU);
+}
+
+// ══════════════════════════════════════════════
+//  DATA IMPORT — REMOTE URL
+// ══════════════════════════════════════════════
+async function connectRemoteURL() {
+  const url = document.getElementById('remoteUrl').value.trim();
+  if (!url) return;
+  document.getElementById('urlStatus').textContent = 'Connecting...';
+  const ok = await fetchRemoteData(url, true);
+  if (ok) {
+    remoteDataUrl = url;
+    localStorage.setItem('inv_remote_url', url);
+    document.getElementById('urlStatus').textContent = `✓ Connected. Auto-refreshes every 5 min.`;
+    document.getElementById('dataModal').style.display = 'none';
+  }
+}
+
+async function fetchRemoteData(url, showError) {
+  try {
+    const res = await fetch(url, { cache:'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const ct = res.headers.get('content-type') || '';
+    let raw;
+    if (ct.includes('json')) {
+      raw = await res.json();
+      raw = Array.isArray(raw) ? raw : (raw.data || raw.inventory || raw.skus || Object.values(raw));
+    } else {
+      const text = await res.text();
+      raw = parseCSV(text);
+    }
+    ALL_SKUS = calcABC(calcKPIs(raw));
+    window.INVENTORY_DATA = raw;
+    onDataLoaded(url.split('/').pop());
+    return true;
+  } catch(err) {
+    if (showError) document.getElementById('urlStatus').textContent = '✗ Error: ' + err.message;
+    return false;
+  }
+}
+
+function reloadDataScript() {
+  const el = document.getElementById('scriptStatus');
+  el.textContent = 'Reloading...';
+  const s = document.createElement('script');
+  s.src = 'inventory_data.js?t=' + Date.now();
+  s.onload = () => {
+    if (window.INVENTORY_DATA) {
+      ALL_SKUS = calcABC(calcKPIs(window.INVENTORY_DATA));
+      onDataLoaded('inventory_data.js');
+      el.textContent = `✓ Reloaded ${ALL_SKUS.length} SKUs`;
+    } else { el.textContent = '✗ inventory_data.js not found or invalid'; }
+  };
+  s.onerror = () => { el.textContent = '✗ Could not load inventory_data.js'; };
+  document.head.appendChild(s);
+}
+
+// ══════════════════════════════════════════════
+//  FORMAT TABLE (modal)
+// ══════════════════════════════════════════════
+function buildFormatTable() {
+  const fields = [
+    ['sku','text','Unique SKU code','core'],
+    ['name','text','Product name','core'],
+    ['cat','text','Category','core'],
+    ['unit','text','Unit of measure (Bags, MT, etc.)','core'],
+    ['leadDays','number','Supplier lead time in days','core'],
+    ['avgDailySales','number','Average daily consumption / sales','core'],
+    ['currentStock','number','Current on-hand quantity','core'],
+    ['unitCost','number','Unit cost in AED','core'],
+    ['supplier','text','Supplier name','core'],
+    ['demandStdDev','number','Std deviation of daily demand (for Z-score safety stock)','extended'],
+    ['holdingCostPct','number','Annual holding cost as % of unit cost (e.g. 0.25 = 25%)','extended'],
+    ['orderingCost','number','Fixed cost per purchase order (AED)','extended'],
+    ['stockoutsLastMonth','number','Number of stockout events last 30 days','extended'],
+    ['totalOrdersLastMonth','number','Total order lines last 30 days','extended'],
+    ['backoredersLastMonth','number','Backorder lines raised last 30 days','extended'],
+    ['systemQty','number','System-recorded inventory quantity','extended'],
+    ['countedQty','number','Physical count quantity (cycle count)','extended'],
+    ['shrinkageUnits','number','Units lost to shrinkage last 30 days','extended'],
+    ['returnedUnits','number','Units returned last 30 days','extended'],
+    ['obsoleteUnits','number','Units flagged as obsolete / non-moving','extended'],
+  ];
+  const tb = document.getElementById('formatTableBody');
+  if (!tb) return;
+  tb.innerHTML = fields.map(([col, type, desc, tier]) => `
+    <tr>
+      <td style="padding:4px 8px;border-bottom:1px solid var(--border);font-family:var(--font-mono);color:var(--accent2);">${col}</td>
+      <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--text-3);">${type}</td>
+      <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--text-3);">${desc}</td>
+      <td style="padding:4px 8px;border-bottom:1px solid var(--border);"><span style="font-size:9px;padding:2px 6px;border-radius:8px;${tier==='core'?'background:rgba(59,130,246,0.12);color:#60A5FA;':'background:rgba(139,92,246,0.12);color:#A78BFA;'}">${tier}</span></td>
+    </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════
+//  AI AGENT
+// ══════════════════════════════════════════════
+const aiHistory = [{ role:'bot', text:'Hello! I am your Inventory Optimization AI Agent. I have access to your full SKU dataset and all computed KPIs including the new advanced metrics: EOQ, Safety Stock (Z-score), Inventory Turnover, DIO, Accuracy Rates, Stockout/Fill Rates, ABC Classification, and Criticality Scoring. Enter your Anthropic API key above to enable live AI analysis.' }];
+
+function renderAIChat() {
+  const el = document.getElementById('aiChat');
+  el.innerHTML = aiHistory.map(m => `<div class="ai-msg ${m.role}">${m.text}</div>`).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+function saveAPIKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('sk-ant-')) { document.getElementById('keyStatus').textContent = '✗ Invalid key format'; return; }
+  localStorage.setItem('inv_api_key', key);
+  document.getElementById('keyStatus').textContent = '✓ Key saved locally';
+  document.getElementById('apiKeyInput').value = '••••••••••••••••';
+}
+
+async function testAPIKey() {
+  const key = localStorage.getItem('inv_api_key') || document.getElementById('apiKeyInput').value.trim();
+  document.getElementById('keyStatus').textContent = 'Testing...';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01' },
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:20, messages:[{ role:'user', content:'Say OK' }] })
+    });
+    const d = await res.json();
+    if (d.content) { document.getElementById('keyStatus').textContent = '✓ API key working!'; }
+    else { document.getElementById('keyStatus').textContent = '✗ ' + (d.error?.message || 'Failed'); }
+  } catch(e) { document.getElementById('keyStatus').textContent = '✗ Connection error'; }
+}
+
+function buildContext() {
+  const critical = ALL_SKUS.filter(s=>s.urgency==='Critical');
+  const high     = ALL_SKUS.filter(s=>s.urgency==='High');
+  const totalVal = ALL_SKUS.reduce((a,s)=>a+s.inventoryValue,0);
+  const reoVal   = [...critical,...high].reduce((a,s)=>a+s.reorderValue,0);
+  const cats     = [...new Set(ALL_SKUS.map(s=>s.cat))];
+  const worstCat = cats.map(c=>({ cat:c, pct:ALL_SKUS.filter(s=>s.cat===c&&s.currentStock<s.targetStock).length/Math.max(1,ALL_SKUS.filter(s=>s.cat===c).length)*100 })).sort((a,b)=>b.pct-a.pct)[0];
+  const avgTurnover = Math.round(ALL_SKUS.reduce((a,s)=>a+s.invTurnoverMonth,0)/ALL_SKUS.length*100)/100;
+  const avgDIO      = Math.round(ALL_SKUS.reduce((a,s)=>a+Math.min(s.dio,120),0)/ALL_SKUS.length*10)/10;
+  const avgAccuracy = Math.round(ALL_SKUS.reduce((a,s)=>a+s.invAccuracyMonthPct,0)/ALL_SKUS.length*100)/100;
+  const avgFillRate = Math.round(ALL_SKUS.reduce((a,s)=>a+s.orderFillRatePct,0)/ALL_SKUS.length*100)/100;
+  const obsoleteVal = ALL_SKUS.reduce((a,s)=>a+s.obsoleteValue,0);
+  const aItems      = ALL_SKUS.filter(s=>s.abcClass==='A').length;
+
+  return `You are an expert inventory optimization analyst for a UAE building materials company.
+LIVE INVENTORY SNAPSHOT:
+- Total SKUs: ${ALL_SKUS.length} across ${cats.length} categories
+- Critical (reorder NOW): ${critical.length} SKUs · AED ${Math.round(critical.reduce((a,s)=>a+s.reorderValue,0)/1000)}K reorder value
+- High priority: ${high.length} SKUs · AED ${Math.round(high.reduce((a,s)=>a+s.reorderValue,0)/1000)}K
+- Total inventory value: AED ${Math.round(totalVal/1000)}K
+- Total reorder budget needed: AED ${Math.round(reoVal/1000)}K
+- Worst coverage category: ${worstCat?.cat} (${worstCat?.pct?.toFixed(0)}% SKUs below target)
+- Overstock (>120% target): ${ALL_SKUS.filter(s=>s.currentStock>s.targetStock*1.2).length} SKUs
+- Top 3 critical by reorder value: ${critical.sort((a,b)=>b.reorderValue-a.reorderValue).slice(0,3).map(s=>`${s.sku} ${s.name}: ${s.daysRemaining}d left, lead ${s.leadDays}d, AED ${s.reorderValue.toLocaleString()} reorder`).join(' | ')}
+ADVANCED KPIs:
+- Avg Inventory Turnover: ${avgTurnover}× per month
+- Avg Days of Inventory Outstanding (DIO): ${avgDIO} days
+- Avg Inventory Accuracy: ${avgAccuracy}%
+- Avg Order Fill Rate: ${avgFillRate}%
+- Total Obsolete Inventory: AED ${Math.round(obsoleteVal/1000)}K
+- ABC: ${aItems} A-class SKUs (top 80% value)
+- SKUs below ROP: ${ALL_SKUS.filter(s=>s.currentStock<s.reorderPoint).length}
+KPI FORMULAS:
+- Safety Stock (Z-score) = Z(95%) × σ_demand × √Lead Time
+- Reorder Point = (Avg Demand × Lead Days) + Safety Stock
+- EOQ = √(2 × Annual Demand × Ordering Cost / Holding Cost per Unit)
+- Inventory Turnover = Monthly Demand / Avg Inventory Level
+- DIO = Avg Inventory Value / Daily COGS
+- ABC: A = top 80% of total inventory value, B = next 15%, C = bottom 5%
+Be precise, actionable, and reference specific SKUs and AED values where relevant.`;
+}
+
+async function askAI(prompt) {
+  document.getElementById('aiInput').value = prompt;
+  await sendAIMsg();
+}
+
+async function sendAIMsg() {
+  const input = document.getElementById('aiInput');
+  const q = input.value.trim();
+  if (!q) return;
+
+  const key = localStorage.getItem('inv_api_key') || '';
+  if (!key) {
+    aiHistory.push({ role:'bot', text:'⚠️ Please enter and save your Anthropic API key first (sk-ant-...). You can get one at console.anthropic.com.' });
+    renderAIChat(); return;
+  }
+
+  input.value = '';
+  document.getElementById('aiSendBtn').disabled = true;
+  aiHistory.push({ role:'usr', text:q });
+  aiHistory.push({ role:'bot', text:'<span class="spinner"></span>Analyzing inventory data...' });
+  renderAIChat();
+
+  try {
+    const messages = [{ role:'user', content: buildContext() + '\n\nUser question: ' + q }];
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, messages })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    aiHistory[aiHistory.length-1] = { role:'bot', text: data.content?.map(c=>c.text||'').join('') || 'No response.' };
+  } catch(e) {
+    aiHistory[aiHistory.length-1] = { role:'bot', text:'✗ Error: ' + e.message + '. Check your API key and try again.' };
+  }
+
+  document.getElementById('aiSendBtn').disabled = false;
+  renderAIChat();
+}
+
+// ══════════════════════════════════════════════
+//  MODALS / TABS
+// ══════════════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'urgency') renderUrgencyFilter();
+  if (id === 'advanced') renderAdvanced();
+}
+
+function showDataModal() { document.getElementById('dataModal').style.display = 'flex'; }
+
+function switchModalTab(id, btn) {
+  document.querySelectorAll('.modal-tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.modal-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('modal-tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+document.getElementById('dataModal').addEventListener('click', function(e) {
+  if (e.target === this) this.style.display = 'none';
+});
+
+// ══════════════════════════════════════════════
+//  FALLBACK DATA GENERATOR (if no JS file)
+// ══════════════════════════════════════════════
+function generateFallbackData() {
+  const cats = ['Cement & Binders','Steel & Rebar','Aggregates','Timber & Wood','Tiles & Flooring','Plumbing','Electrical','Waterproofing','Insulation','Paints & Coatings','Glass & Glazing','Masonry Blocks'];
+  const sup   = ['Al Futtaim Building','Arabian Construction','Emirates Steel','Gulf Timber Co','Danube Group','Jotun UAE'];
+  const units = ['Bags','MT','M3','LM','M2','PCS','Rolls','Drums'];
+  const rows  = [];
+  let seed = 20250418;
+  function sr() { seed=(seed*1664525+1013904223)&0xffffffff; return (seed>>>0)/0xffffffff; }
+  function srnd(a,b){ return sr()*(b-a)+a; }
+  function srndI(a,b){ return Math.floor(srnd(a,b+1)); }
+  function spk(arr){ return arr[Math.floor(sr()*arr.length)]; }
+
+  cats.forEach((cat,ci) => {
+    const code = cat.replace(/[^A-Z]/g,'').slice(0,3)||cat.slice(0,3).toUpperCase();
+    for (let i = 0; i < 42; i++) {
+      const ld  = srndI(3,28), ads = Math.round(srnd(0.5,15)*10)/10, uc = Math.round(srnd(5,850)*100)/100;
+      const ts  = Math.round((ld*1.5+ld)*ads*1.15);
+      const cs  = Math.round(srnd(0, ts*1.4));
+      const md  = Math.round(ads*30);
+      const soR = sr();
+      rows.push({
+        sku: code+'-'+String(ci*100+i+1001).padStart(5,'0'),
+        name: cat+' Item '+(i+1), cat, unit: spk(units),
+        leadDays: ld, avgDailySales: ads, currentStock: cs, unitCost: uc, supplier: spk(sup),
+        demandStdDev: Math.round(ads*srnd(0.2,0.6)*10)/10,
+        holdingCostPct: Math.round(srnd(0.18,0.30)*100)/100,
+        orderingCost: Math.round(srnd(150,600)),
+        stockoutsLastMonth: soR<0.55?0:soR<0.78?1:soR<0.92?2:3,
+        totalOrdersLastMonth: srndI(5,40),
+        backoredersLastMonth: srndI(0,4),
+        systemQty: cs, countedQty: Math.max(0,cs+Math.round(cs*srnd(-0.05,0.05))),
+        shrinkageUnits: Math.round(md*srnd(0,0.03)),
+        returnedUnits: Math.round(md*srnd(0,0.08)),
+        obsoleteUnits: sr()<0.75?0:Math.round(cs*srnd(0.05,0.20)),
+        criticalityScore: null
+      });
+    }
+  });
+  return rows;
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+(function init() {
+  const saved = localStorage.getItem('inv_api_key');
+  if (saved) {
+    document.getElementById('apiKeyInput').value = '••••••••••••••••';
+    document.getElementById('keyStatus').textContent = '✓ Key saved';
+  }
+
+  const extScript = document.createElement('script');
+  extScript.src = 'inventory_data.js?t=' + Date.now();
+  extScript.onload = () => loadBuiltinData();
+  extScript.onerror = () => {
+    ALL_SKUS = calcABC(calcKPIs(generateFallbackData()));
+    onDataLoaded('Sample data (deploy with inventory_data.js for real data)');
+  };
+  document.head.appendChild(extScript);
+
+  renderAIChat();
+})();
+</script>
+</body>
+</html>
