@@ -920,6 +920,98 @@ const CALENDAR_DAYS = 30;
 // ══════════════════════════════════════════════
 //  CORE KPI CALCULATIONS (existing + extended)
 // ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+//  HEADER NORMALISATION
+//  Maps any display-name variant → camelCase field
+//  Handles Excel column headers, CSV aliases, etc.
+// ══════════════════════════════════════════════
+const HEADER_MAP = {
+  // Core
+  'sku':                          'sku',
+  'name':                         'name',
+  'cat':                          'cat',
+  'category':                     'cat',
+  'unit':                         'unit',
+  'unit of measure':              'unit',
+  'leaddays':                     'leadDays',
+  'lead days':                    'leadDays',
+  'lead time':                    'leadDays',
+  'lead time (days)':             'leadDays',
+  'avgdailysales':                'avgDailySales',
+  'avg daily sales':              'avgDailySales',
+  'avg daily consumption':        'avgDailySales',
+  'daily sales':                  'avgDailySales',
+  'currentstock':                 'currentStock',
+  'current stock':                'currentStock',
+  'on hand':                      'currentStock',
+  'on-hand':                      'currentStock',
+  'unitcost':                     'unitCost',
+  'unit cost':                    'unitCost',
+  'unit cost (aed)':              'unitCost',
+  'cost':                         'unitCost',
+  'supplier':                     'supplier',
+  // Extended
+  'demandstddev':                 'demandStdDev',
+  'demand std dev':               'demandStdDev',
+  'demand stddev':                'demandStdDev',
+  'std dev':                      'demandStdDev',
+  'holdingcostpct':               'holdingCostPct',
+  'holding cost %':               'holdingCostPct',
+  'holding cost pct':             'holdingCostPct',
+  'holding cost':                 'holdingCostPct',
+  'orderingcost':                 'orderingCost',
+  'ordering cost':                'orderingCost',
+  'ordering cost (aed)':          'orderingCost',
+  'order cost':                   'orderingCost',
+  'stockoutslastmonth':           'stockoutsLastMonth',
+  'stockouts last month':         'stockoutsLastMonth',
+  'stockouts':                    'stockoutsLastMonth',
+  'totalorderslastmonth':         'totalOrdersLastMonth',
+  'total orders last month':      'totalOrdersLastMonth',
+  'total orders':                 'totalOrdersLastMonth',
+  'backorederslastmonth':         'backoredersLastMonth',
+  'backorders last month':        'backoredersLastMonth',
+  'backorders':                   'backoredersLastMonth',
+  'systemqty':                    'systemQty',
+  'system qty':                   'systemQty',
+  'system quantity':              'systemQty',
+  'countedqty':                   'countedQty',
+  'counted qty':                  'countedQty',
+  'counted quantity':             'countedQty',
+  'physical count':               'countedQty',
+  'shrinkageunits':               'shrinkageUnits',
+  'shrinkage units':              'shrinkageUnits',
+  'shrinkage':                    'shrinkageUnits',
+  'returnedunits':                'returnedUnits',
+  'returned units':               'returnedUnits',
+  'returns':                      'returnedUnits',
+  'obsoleteunits':                'obsoleteUnits',
+  'obsolete units':               'obsoleteUnits',
+  'obsolete':                     'obsoleteUnits',
+  'criticalityscore':             'criticalityScore',
+  'criticality score':            'criticalityScore',
+  'criticality score (1-10, optional)': 'criticalityScore',
+  'criticality':                  'criticalityScore',
+};
+
+function normaliseRow(row) {
+  const out = {};
+  Object.keys(row).forEach(key => {
+    const mapped = HEADER_MAP[key.trim().toLowerCase()];
+    if (mapped) {
+      out[mapped] = row[key];
+    } else {
+      // Keep original key as fallback so nothing is lost
+      out[key] = row[key];
+    }
+  });
+  return out;
+}
+
+function normaliseRows(rows) {
+  return rows.map(normaliseRow);
+}
+
 function calcKPIs(raw) {
   return raw.map(r => {
     // ── Base fields ────────────────────────────────────────────────
@@ -1992,7 +2084,7 @@ function processFile(file) {
     reader.onload = ev => {
       try {
         const raw = JSON.parse(ev.target.result);
-        const arr = Array.isArray(raw) ? raw : (raw.data || raw.inventory || raw.skus || Object.values(raw));
+        const arr = normaliseRows(Array.isArray(raw) ? raw : (raw.data || raw.inventory || raw.skus || Object.values(raw)));
         ALL_SKUS = calcABC(calcKPIs(arr));
         window.INVENTORY_DATA = arr;
         document.getElementById('fileStatus').textContent = `✓ Loaded ${ALL_SKUS.length} SKUs from ${file.name}`;
@@ -2005,7 +2097,7 @@ function processFile(file) {
     const reader = new FileReader();
     reader.onload = ev => {
       try {
-        const rows = parseCSV(ev.target.result);
+        const rows = normaliseRows(parseCSV(ev.target.result));
         ALL_SKUS = calcABC(calcKPIs(rows));
         window.INVENTORY_DATA = rows;
         document.getElementById('fileStatus').textContent = `✓ Loaded ${ALL_SKUS.length} SKUs from ${file.name}`;
@@ -2021,7 +2113,7 @@ function processFile(file) {
       try {
         const wb = XLSX.read(ev.target.result, { type:'array' });
         const ws = wb.Sheets[wb.SheetNames[0]];
-        const raw = XLSX.utils.sheet_to_json(ws);
+        const raw = normaliseRows(XLSX.utils.sheet_to_json(ws));
         ALL_SKUS = calcABC(calcKPIs(raw));
         window.INVENTORY_DATA = raw;
         document.getElementById('fileStatus').textContent = `✓ Loaded ${ALL_SKUS.length} SKUs from ${file.name}`;
@@ -2070,10 +2162,10 @@ async function fetchRemoteData(url, showError) {
     let raw;
     if (ct.includes('json')) {
       raw = await res.json();
-      raw = Array.isArray(raw) ? raw : (raw.data || raw.inventory || raw.skus || Object.values(raw));
+      raw = normaliseRows(Array.isArray(raw) ? raw : (raw.data || raw.inventory || raw.skus || Object.values(raw)));
     } else {
       const text = await res.text();
-      raw = parseCSV(text);
+      raw = normaliseRows(parseCSV(text));
     }
     ALL_SKUS = calcABC(calcKPIs(raw));
     window.INVENTORY_DATA = raw;
