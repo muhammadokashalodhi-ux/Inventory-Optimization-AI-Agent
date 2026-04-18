@@ -926,99 +926,105 @@ const CALENDAR_DAYS = 30;
 //  Handles Excel column headers, CSV aliases, etc.
 // ══════════════════════════════════════════════
 const HEADER_MAP = {
-  // Core
-  'sku':                          'sku',
-  'name':                         'name',
-  'cat':                          'cat',
-  'category':                     'cat',
-  'unit':                         'unit',
-  'unit of measure':              'unit',
-  'leaddays':                     'leadDays',
-  'lead days':                    'leadDays',
-  'lead time':                    'leadDays',
-  'lead time (days)':             'leadDays',
-  'avgdailysales':                'avgDailySales',
-  'avg daily sales':              'avgDailySales',
-  'avg daily consumption':        'avgDailySales',
-  'daily sales':                  'avgDailySales',
-  'currentstock':                 'currentStock',
-  'current stock':                'currentStock',
-  'on hand':                      'currentStock',
-  'on-hand':                      'currentStock',
-  'unitcost':                     'unitCost',
-  'unit cost':                    'unitCost',
-  'unit cost (aed)':              'unitCost',
-  'cost':                         'unitCost',
-  'supplier':                     'supplier',
-  // Extended
-  'demandstddev':                 'demandStdDev',
-  'demand std dev':               'demandStdDev',
-  'demand stddev':                'demandStdDev',
-  'std dev':                      'demandStdDev',
-  'holdingcostpct':               'holdingCostPct',
-  'holding cost %':               'holdingCostPct',
-  'holding cost pct':             'holdingCostPct',
-  'holding cost':                 'holdingCostPct',
-  'orderingcost':                 'orderingCost',
-  'ordering cost':                'orderingCost',
-  'ordering cost (aed)':          'orderingCost',
-  'order cost':                   'orderingCost',
-  'stockoutslastmonth':           'stockoutsLastMonth',
-  'stockouts last month':         'stockoutsLastMonth',
-  'stockouts':                    'stockoutsLastMonth',
-  'totalorderslastmonth':         'totalOrdersLastMonth',
-  'total orders last month':      'totalOrdersLastMonth',
-  'total orders':                 'totalOrdersLastMonth',
-  'backorederslastmonth':         'backoredersLastMonth',
-  'backorders last month':        'backoredersLastMonth',
-  'backorders':                   'backoredersLastMonth',
-  'systemqty':                    'systemQty',
-  'system qty':                   'systemQty',
-  'system quantity':              'systemQty',
-  'countedqty':                   'countedQty',
-  'counted qty':                  'countedQty',
-  'counted quantity':             'countedQty',
-  'physical count':               'countedQty',
-  'shrinkageunits':               'shrinkageUnits',
-  'shrinkage units':              'shrinkageUnits',
-  'shrinkage':                    'shrinkageUnits',
-  'returnedunits':                'returnedUnits',
-  'returned units':               'returnedUnits',
-  'returns':                      'returnedUnits',
-  'obsoleteunits':                'obsoleteUnits',
-  'obsolete units':               'obsoleteUnits',
-  'obsolete':                     'obsoleteUnits',
-  'criticalityscore':             'criticalityScore',
-  'criticality score':            'criticalityScore',
-  'criticality score (1-10, optional)': 'criticalityScore',
-  'criticality':                  'criticalityScore',
+  // ── Core fields ───────────────────────────────────────────────
+  'sku':                                    'sku',
+  'name':                                   'name',
+  'cat':                                    'cat',
+  'category':                               'cat',
+  'unit':                                   'unit',
+  'unit of measure':                        'unit',
+  'leaddays':                               'leadDays',
+  'lead days':                              'leadDays',
+  'lead time':                              'leadDays',
+  'lead time (days)':                       'leadDays',
+  'avgdailysales':                          'avgDailySales',
+  'avg daily sales':                        'avgDailySales',
+  'avg daily consumption':                  'avgDailySales',
+  'daily sales':                            'avgDailySales',
+  'currentstock':                           'currentStock',
+  'current stock':                          'currentStock',
+  'on hand':                                'currentStock',
+  'on-hand':                                'currentStock',
+  'unitcost':                               'unitCost',
+  'unit cost':                              'unitCost',
+  'unit cost (aed)':                        'unitCost',
+  'cost':                                   'unitCost',
+  'supplier':                               'supplier',
+  // ── Extended fields ───────────────────────────────────────────
+  'demandstddev':                           'demandStdDev',
+  'demand std dev':                         'demandStdDev',
+  'demand stddev':                          'demandStdDev',
+  'std dev':                                'demandStdDev',
+  'holdingcostpct':                         'holdingCostPct',
+  'holding cost %':                         'holdingCostPct',
+  'holding cost pct':                       'holdingCostPct',
+  'holding cost':                           'holdingCostPct',
+  'orderingcost':                           'orderingCost',
+  'ordering cost':                          'orderingCost',
+  'ordering cost (aed)':                    'orderingCost',
+  'order cost':                             'orderingCost',
+  'stockoutslastmonth':                     'stockoutsLastMonth',
+  'stockouts last month':                   'stockoutsLastMonth',
+  'stockouts':                              'stockoutsLastMonth',
+  'totalorderslastmonth':                   'totalOrdersLastMonth',
+  'total orders last month':                'totalOrdersLastMonth',
+  'total orders':                           'totalOrdersLastMonth',
+  'backorederslastmonth':                   'backoredersLastMonth',
+  'backorders last month':                  'backoredersLastMonth',
+  'backorderslastmonth':                    'backoredersLastMonth',
+  'backorders':                             'backoredersLastMonth',
+  'systemqty':                              'systemQty',
+  'system qty':                             'systemQty',
+  'system quantity':                        'systemQty',
+  'countedqty':                             'countedQty',
+  'counted qty':                            'countedQty',
+  'counted quantity':                       'countedQty',
+  'physical count':                         'countedQty',
+  'shrinkageunits':                         'shrinkageUnits',
+  'shrinkage units':                        'shrinkageUnits',
+  'shrinkage':                              'shrinkageUnits',
+  'returnedunits':                          'returnedUnits',
+  'returned units':                         'returnedUnits',
+  'returns':                                'returnedUnits',
+  'obsoleteunits':                          'obsoleteUnits',
+  'obsolete units':                         'obsoleteUnits',
+  'obsolete':                               'obsoleteUnits',
+  'criticalityscore':                       'criticalityScore',
+  'criticality score':                      'criticalityScore',
+  'criticality score (1-10, optional)':     'criticalityScore',
+  'criticality':                            'criticalityScore',
 };
 
 function normaliseRow(row) {
   const out = {};
   Object.keys(row).forEach(key => {
-    const mapped = HEADER_MAP[key.trim().toLowerCase()];
-    if (mapped) {
-      out[mapped] = row[key];
-    } else {
-      // Keep original key as fallback so nothing is lost
-      out[key] = row[key];
-    }
+    const clean  = String(key).trim().toLowerCase();
+    const mapped = HEADER_MAP[clean];
+    // Use mapped name if found, otherwise keep original key as-is
+    out[mapped || key.trim()] = row[key];
   });
   return out;
 }
 
 function normaliseRows(rows) {
+  if (!rows || !rows.length) return rows;
   return rows.map(normaliseRow);
 }
 
+function safeSplit(str) { return (str || 'Unknown').split(' ')[0]; }
+
 function calcKPIs(raw) {
   return raw.map(r => {
-    // ── Base fields ────────────────────────────────────────────────
-    const leadDays  = +r.leadDays  || 7;
-    const ads       = +r.avgDailySales || 1;
-    const cur       = +r.currentStock  || 0;
-    const cost      = +r.unitCost      || 0;
+    // ── Base fields — safe coerce everything ──────────────────────
+    const leadDays  = +r.leadDays  || +r['Lead Days']  || +r['lead_days']  || 7;
+    const ads       = +r.avgDailySales || +r['Avg Daily Sales'] || +r['avg_daily_sales'] || 1;
+    const cur       = +r.currentStock  || +r['Current Stock']  || +r['current_stock']  || 0;
+    const cost      = +r.unitCost      || +r['Unit Cost (AED)'] || +r['unit_cost'] || 0;
+    const cat       = r.cat || r['Category'] || r['category'] || r['cat'] || 'Uncategorised';
+    const sku       = r.sku || r['SKU'] || r['sku'] || '';
+    const name      = r.name || r['Name'] || r['name'] || '';
+    const unit      = r.unit || r['Unit'] || r['unit'] || 'PCS';
+    const supplier  = r.supplier || r['Supplier'] || r['supplier'] || 'Unknown';
 
     // ── EXISTING: safety stock (simple: leadDays * 1.5 * ads) ─────
     const safetyStockDays = Math.round(leadDays * 1.5);
@@ -1162,6 +1168,8 @@ function calcKPIs(raw) {
 
     return {
       ...r,
+      // Always use the safely-resolved core string fields (never undefined)
+      sku, name, cat, unit, supplier,
       leadDays, avgDailySales: ads, currentStock: cur, unitCost: cost,
       // Core existing
       safetyStock, reorderPoint, targetStock, thresholdPoint,
@@ -1357,7 +1365,7 @@ function renderOverviewCharts(skus) {
   charts['c2'] = new Chart(document.getElementById('c2'), {
     type: 'bar',
     data: {
-      labels: c2cats.map(c => c.split(' ')[0]),
+      labels: c2cats.map(c => safeSplit(c)),
       datasets: [
         { label: 'Avg days left', data: c2cats.map(c => { const s=skus.filter(x=>x.cat===c); return s.length?Math.round(s.reduce((a,x)=>a+x.daysRemaining,0)/s.length):0; }), backgroundColor: '#3B82F6', borderWidth:0 },
         { label: 'Avg lead time', data: c2cats.map(c => { const s=skus.filter(x=>x.cat===c); return s.length?Math.round(s.reduce((a,x)=>a+x.leadDays,0)/s.length):0; }), backgroundColor: '#F59E0B', borderWidth:0 }
@@ -1369,14 +1377,14 @@ function renderOverviewCharts(skus) {
   destroyChart('c3');
   charts['c3'] = new Chart(document.getElementById('c3'), {
     type: 'bar',
-    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[{label:'Value K AED', data:cats.map(c=>Math.round(skus.filter(x=>x.cat===c).reduce((a,s)=>a+s.inventoryValue,0)/1000)), backgroundColor:'#06B6D4', borderWidth:0}] },
+    data: { labels: cats.map(c=>safeSplit(c)), datasets:[{label:'Value K AED', data:cats.map(c=>Math.round(skus.filter(x=>x.cat===c).reduce((a,s)=>a+s.inventoryValue,0)/1000)), backgroundColor:'#06B6D4', borderWidth:0}] },
     options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{display:false}}}, plugins:{legend:{display:false}} }
   });
 
   destroyChart('c4');
   charts['c4'] = new Chart(document.getElementById('c4'), {
     type: 'bar',
-    data: { labels: cats.slice(0,9).map(c=>c.split(' ')[0]), datasets:[{label:'Below safety stock', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock<x.safetyStock).length), backgroundColor:'#EF4444', borderWidth:0}] },
+    data: { labels: cats.slice(0,9).map(c=>safeSplit(c)), datasets:[{label:'Below safety stock', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock<x.safetyStock).length), backgroundColor:'#EF4444', borderWidth:0}] },
     options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}}}, plugins:{legend:{display:false}} }
   });
 
@@ -1384,7 +1392,7 @@ function renderOverviewCharts(skus) {
   charts['c5'] = new Chart(document.getElementById('c5'), {
     type: 'bar',
     data: {
-      labels: cats.slice(0,9).map(c=>c.split(' ')[0]),
+      labels: cats.slice(0,9).map(c=>safeSplit(c)),
       datasets: [
         { label:'Above target', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock>=x.targetStock).length), backgroundColor:'#10B981', borderWidth:0 },
         { label:'Below target', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock< x.targetStock).length), backgroundColor:'#7F1D1D', borderWidth:0 }
@@ -1581,7 +1589,7 @@ function renderSKUTable() {
     ${shown.map(s => `<tr>
       <td class="mono">${s.sku}</td>
       <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;">${s.name}</td>
-      <td style="color:var(--text-3);font-size:10px;">${s.cat.split(' ')[0]}</td>
+      <td style="color:var(--text-3);font-size:10px;">${safeSplit(s.cat)}</td>
       <td style="color:var(--text-3);font-size:10px;">${s.unit}</td>
       <td>${s.currentStock.toLocaleString()}</td>
       <td>${s.safetyStock.toLocaleString()}</td>
@@ -1646,14 +1654,14 @@ function renderAdvanced() {
   destroyChart('advC1');
   charts['advC1'] = new Chart(document.getElementById('advC1'), {
     type: 'bar',
-    data: { labels: cats.map(c=>c.split(' ')[0]), datasets: [{ label:'Turnover/Month', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>s.invTurnoverMonth)*100)/100), backgroundColor:'#3B82F6', borderWidth:0 }] },
+    data: { labels: cats.map(c=>safeSplit(c)), datasets: [{ label:'Turnover/Month', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>s.invTurnoverMonth)*100)/100), backgroundColor:'#3B82F6', borderWidth:0 }] },
     options: chartOpts('Turnover ×')
   });
 
   destroyChart('advC2');
   charts['advC2'] = new Chart(document.getElementById('advC2'), {
     type: 'bar',
-    data: { labels: cats.map(c=>c.split(' ')[0]), datasets: [{ label:'DIO (days)', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>Math.min(s.dio,120))*10)/10), backgroundColor:'#06B6D4', borderWidth:0 }] },
+    data: { labels: cats.map(c=>safeSplit(c)), datasets: [{ label:'DIO (days)', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>Math.min(s.dio,120))*10)/10), backgroundColor:'#06B6D4', borderWidth:0 }] },
     options: chartOpts('Days')
   });
 
@@ -1675,14 +1683,14 @@ function renderAdvanced() {
   destroyChart('advC3');
   charts['advC3'] = new Chart(document.getElementById('advC3'), {
     type: 'bar',
-    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[{ label:'Accuracy %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct)*100)/100), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct); return v<95?'#EF4444':v<98?'#F59E0B':'#10B981'; }), borderWidth:0 }] },
+    data: { labels: cats.map(c=>safeSplit(c)), datasets:[{ label:'Accuracy %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct)*100)/100), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct); return v<95?'#EF4444':v<98?'#F59E0B':'#10B981'; }), borderWidth:0 }] },
     options: chartOpts('%', {min:90, max:100})
   });
 
   destroyChart('advC4');
   charts['advC4'] = new Chart(document.getElementById('advC4'), {
     type: 'bar',
-    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[
+    data: { labels: cats.map(c=>safeSplit(c)), datasets:[
       { label:'Shrinkage %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.shrinkagePct)*100)/100), backgroundColor:'#EF4444', borderWidth:0 },
       { label:'Obsolete %',  data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.obsoletePct)*100)/100),  backgroundColor:'#8B5CF6', borderWidth:0 }
     ]},
@@ -1707,7 +1715,7 @@ function renderAdvanced() {
   destroyChart('advC5');
   charts['advC5'] = new Chart(document.getElementById('advC5'), {
     type: 'bar',
-    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[
+    data: { labels: cats.map(c=>safeSplit(c)), datasets:[
       { label:'Stockout %',  data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.stockoutRatePct)*100)/100),  backgroundColor:'#EF4444', borderWidth:0 },
       { label:'Backorder %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.backorderRatePct)*100)/100), backgroundColor:'#F59E0B', borderWidth:0 }
     ]},
@@ -1717,7 +1725,7 @@ function renderAdvanced() {
   destroyChart('advC6');
   charts['advC6'] = new Chart(document.getElementById('advC6'), {
     type: 'bar',
-    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[
+    data: { labels: cats.map(c=>safeSplit(c)), datasets:[
       { label:'Fill Rate %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.orderFillRatePct)*100)/100),backgroundColor:'#10B981', borderWidth:0 },
       { label:'Return Rate %',data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.returnRatePct)*100)/100),  backgroundColor:'#06B6D4', borderWidth:0 }
     ]},
@@ -1743,7 +1751,7 @@ function renderAdvanced() {
   destroyChart('advC7');
   charts['advC7'] = new Chart(document.getElementById('advC7'), {
     type: 'bar',
-    data: { labels: sups.map(s=>s.split(' ')[0]), datasets:[
+    data: { labels: sups.map(s=>safeSplit(s)), datasets:[
       { label:'Avg EOQ',         data:sups.map(s=>Math.round(avg(skus.filter(x=>x.supplier===s),x=>x.eoq))), backgroundColor:'#3B82F6', borderWidth:0 },
       { label:'Avg Reorder Qty', data:sups.map(s=>Math.round(avg(skus.filter(x=>x.supplier===s),x=>x.reorderQty))), backgroundColor:'#F59E0B', borderWidth:0 }
     ]},
@@ -1753,7 +1761,7 @@ function renderAdvanced() {
   destroyChart('advC8');
   charts['advC8'] = new Chart(document.getElementById('advC8'), {
     type: 'bar',
-    data: { labels: cats.map(c=>c.split(' ')[0]), datasets:[
+    data: { labels: cats.map(c=>safeSplit(c)), datasets:[
       { label:'Safety Stock (simple)', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.safetyStock))), backgroundColor:'#10B981', borderWidth:0 },
       { label:'Safety Stock (Z-score)', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.safetyStockAdv))), backgroundColor:'#3B82F6', borderWidth:0 }
     ]},
@@ -1792,7 +1800,7 @@ function renderAdvanced() {
   destroyChart('advC11');
   charts['advC11'] = new Chart(document.getElementById('advC11'), {
     type: 'bar',
-    data: { labels:cats.map(c=>c.split(' ')[0]), datasets:[{ label:'Avg Criticality Score', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore)*10)/10), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore); return v>=7?'#EF4444':v>=4?'#F59E0B':'#10B981'; }), borderWidth:0 }] },
+    data: { labels:cats.map(c=>safeSplit(c)), datasets:[{ label:'Avg Criticality Score', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore)*10)/10), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore); return v>=7?'#EF4444':v>=4?'#F59E0B':'#10B981'; }), borderWidth:0 }] },
     options: chartOpts('Score', {min:0, max:10})
   });
 
@@ -1989,7 +1997,7 @@ function renderAICharts() {
   destroyChart('aiChart1');
   charts['aiChart1'] = new Chart(document.getElementById('aiChart1'), {
     type: 'bar',
-    data: { labels: cats.slice(0,8).map(c=>c.split(' ')[0]), datasets:[{ label:'K AED', data:cats.slice(0,8).map(c=>Math.round(ALL_SKUS.filter(s=>s.cat===c&&(s.urgency==='Critical'||s.urgency==='High')).reduce((a,s)=>a+s.reorderValue,0)/1000)), backgroundColor:'#3B82F6', borderWidth:0 }] },
+    data: { labels: cats.slice(0,8).map(c=>safeSplit(c)), datasets:[{ label:'K AED', data:cats.slice(0,8).map(c=>Math.round(ALL_SKUS.filter(s=>s.cat===c&&(s.urgency==='Critical'||s.urgency==='High')).reduce((a,s)=>a+s.reorderValue,0)/1000)), backgroundColor:'#3B82F6', borderWidth:0 }] },
     options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{display:false}}}, plugins:{legend:{display:false}} }
   });
 
@@ -2119,7 +2127,10 @@ function processFile(file) {
         document.getElementById('fileStatus').textContent = `✓ Loaded ${ALL_SKUS.length} SKUs from ${file.name}`;
         onDataLoaded(file.name);
         document.getElementById('dataModal').style.display = 'none';
-      } catch(err) { document.getElementById('fileStatus').textContent = '✗ Excel error: ' + err.message; }
+      } catch(err) {
+        console.error('Excel import error:', err);
+        document.getElementById('fileStatus').textContent = '✗ Excel error: ' + err.message + ' — ' + (err.stack||'').split('\n')[1];
+      }
     };
     reader.readAsArrayBuffer(file);
   } else {
