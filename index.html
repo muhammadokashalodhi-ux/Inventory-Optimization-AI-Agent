@@ -10,50 +10,52 @@
 
 <style>
 :root {
-  --bg-0: #070B14;
-  --bg-1: #0C1220;
-  --bg-2: #111827;
-  --bg-3: #1A2236;
-  --bg-4: #1F2D45;
-  --border: rgba(99,130,183,0.14);
-  --border-hover: rgba(99,130,183,0.3);
-  --accent: #3B82F6;
-  --accent-glow: rgba(59,130,246,0.15);
-  --accent2: #06B6D4;
-  --red: #EF4444;
-  --red-bg: rgba(239,68,68,0.1);
-  --amber: #F59E0B;
-  --amber-bg: rgba(245,158,11,0.1);
-  --green: #10B981;
-  --green-bg: rgba(16,185,129,0.1);
-  --blue: #3B82F6;
-  --blue-bg: rgba(59,130,246,0.1);
-  --purple: #8B5CF6;
-  --purple-bg: rgba(139,92,246,0.1);
-  --text-1: #F1F5FF;
-  --text-2: #94A3C4;
-  --text-3: #5A6B8A;
+  --bg-0: #EEF2F7;
+  --bg-1: #FFFFFF;
+  --bg-2: #FFFFFF;
+  --bg-3: #F7F9FC;
+  --bg-4: #E8EDF5;
+  --border: rgba(37,99,235,0.12);
+  --border-hover: rgba(37,99,235,0.28);
+  --accent: #2563EB;
+  --accent-glow: rgba(37,99,235,0.08);
+  --accent2: #0891B2;
+  --red: #DC2626;
+  --red-bg: rgba(220,38,38,0.08);
+  --amber: #D97706;
+  --amber-bg: rgba(217,119,6,0.08);
+  --green: #059669;
+  --green-bg: rgba(5,150,105,0.08);
+  --blue: #2563EB;
+  --blue-bg: rgba(37,99,235,0.08);
+  --purple: #7C3AED;
+  --purple-bg: rgba(124,58,237,0.08);
+  --text-1: #0F172A;
+  --text-2: #374151;
+  --text-3: #6B7280;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
   --font-head: 'Sora', sans-serif;
   --radius: 10px;
   --radius-sm: 6px;
+  --shadow-sm: 0 1px 3px rgba(15,23,42,0.08);
+  --shadow: 0 4px 6px rgba(15,23,42,0.07);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 body {
   font-family: var(--font-body);
-  background: var(--bg-0);
-  color: var(--text-1);
+  background: #EEF2F7;
+  color: #0F172A;
   font-size: 13px;
   line-height: 1.5;
   overflow-x: hidden;
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: var(--bg-1); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-track { background: #E8EDF5; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
 
 /* ── HEADER ── */
 .header {
@@ -67,6 +69,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 1px 4px rgba(15,23,42,0.08);
 }
 .logo-mark { display: flex; align-items: center; gap: 10px; }
 .logo-icon {
@@ -77,20 +80,20 @@ body {
   font-family: var(--font-head);
   font-size: 14px; font-weight: 700; color: white;
 }
-.logo-text { font-family: var(--font-head); font-size: 15px; font-weight: 600; color: var(--text-1); }
+.logo-text { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: #0F172A; }
 .logo-sub { font-size: 10px; color: var(--text-3); margin-top: 1px; }
 .header-right { display: flex; align-items: center; gap: 10px; }
 .badge-live {
-  background: rgba(16,185,129,0.12);
-  color: #10B981;
+  background: rgba(5,150,105,0.10);
+  color: #065F46;
   font-size: 10px; font-weight: 600;
   padding: 3px 9px; border-radius: 20px;
-  border: 1px solid rgba(16,185,129,0.2);
+  border: 1px solid rgba(5,150,105,0.25);
   letter-spacing: 0.5px;
 }
 .sync-info { font-size: 11px; color: var(--text-3); }
 .btn-sm {
-  background: var(--bg-3);
+  background: white;
   border: 1px solid var(--border);
   color: var(--text-2);
   padding: 5px 12px; border-radius: var(--radius-sm);
@@ -110,7 +113,7 @@ body {
 
 /* ── NAV ── */
 .nav {
-  background: var(--bg-1);
+  background: white;
   border-bottom: 1px solid var(--border);
   display: flex; gap: 0; padding: 0 24px;
 }
@@ -122,7 +125,7 @@ body {
   border-bottom: 2px solid transparent;
   transition: all 0.15s; letter-spacing: 0.2px;
 }
-.nav-btn:hover { color: var(--text-1); }
+.nav-btn:hover { color: var(--accent); }
 .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* ── LAYOUT ── */
@@ -142,7 +145,7 @@ body {
 .data-banner.connected { border-color: rgba(16,185,129,0.3); border-style: solid; }
 .banner-icon { font-size: 24px; }
 .banner-body { flex: 1; }
-.banner-title { font-weight: 600; font-size: 13px; color: var(--text-1); margin-bottom: 2px; }
+.banner-title { font-weight: 600; font-size: 13px; color: #0F172A; margin-bottom: 2px; }
 .banner-sub { font-size: 11px; color: var(--text-3); }
 .banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .file-input-hidden { display: none; }
@@ -155,10 +158,11 @@ body {
   border-radius: var(--radius);
   padding: 14px 16px;
   transition: border-color 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 .kpi-card:hover { border-color: var(--border-hover); }
 .kpi-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-.kpi-val { font-family: var(--font-head); font-size: 20px; font-weight: 600; color: var(--text-1); }
+.kpi-val { font-family: var(--font-head); font-size: 20px; font-weight: 600; color: #0F172A; }
 .kpi-sub { font-size: 10px; margin-top: 4px; }
 .kpi-red { color: var(--red); }
 .kpi-amber { color: var(--amber); }
@@ -173,8 +177,8 @@ body {
 }
 .section-title {
   font-family: var(--font-head);
-  font-size: 11px; font-weight: 600;
-  color: var(--text-3);
+  font-size: 11px; font-weight: 700;
+  color: var(--text-2);
   text-transform: uppercase; letter-spacing: 1px;
 }
 
@@ -182,16 +186,17 @@ body {
 .filter-bar {
   display: flex; align-items: center; gap: 8px;
   flex-wrap: wrap; margin-bottom: 14px;
-  background: var(--bg-2);
+  background: white;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 10px 14px;
+  box-shadow: var(--shadow-sm);
 }
 .filter-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
 .filter-select, .filter-input {
-  background: var(--bg-3);
+  background: white;
   border: 1px solid var(--border);
-  color: var(--text-1);
+  color: #0F172A;
   padding: 5px 10px;
   border-radius: var(--radius-sm);
   font-size: 11px; font-family: var(--font-body);
@@ -213,9 +218,10 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
+  box-shadow: var(--shadow-sm);
 }
 .chart-card h3 {
-  font-size: 11px; font-weight: 500; color: var(--text-2);
+  font-size: 11px; font-weight: 600; color: #0F172A;
   margin-bottom: 14px; letter-spacing: 0.1px;
 }
 .chart-legend {
@@ -226,7 +232,7 @@ body {
 
 /* ── TABLE ── */
 .table-wrap {
-  background: var(--bg-2);
+  background: white;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow-x: auto;
@@ -236,26 +242,26 @@ body {
 table { width: 100%; border-collapse: collapse; font-size: 11px; }
 thead { position: sticky; top: 0; z-index: 2; }
 th {
-  background: var(--bg-3);
-  color: var(--text-3);
+  background: #F1F5F9;
+  color: var(--text-2);
   padding: 9px 12px;
   text-align: left;
   font-weight: 500;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #E2E8F0;
   white-space: nowrap;
 }
 td {
   padding: 7px 12px;
   color: var(--text-2);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #EEF2F7;
   white-space: nowrap;
 }
 tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--bg-3); }
-.mono { font-family: var(--font-mono); font-size: 10px; color: var(--accent); }
+tr:hover td { background: #F1F5FE; }
+.mono { font-family: var(--font-mono); font-size: 10px; color: var(--accent); font-weight: 500; }
 
 /* ── BADGES ── */
 .badge {
@@ -264,26 +270,26 @@ tr:hover td { background: var(--bg-3); }
   padding: 2px 7px; border-radius: 10px;
   text-transform: uppercase; letter-spacing: 0.5px;
 }
-.badge-Critical  { background: rgba(239,68,68,0.15);  color: #F87171; border: 1px solid rgba(239,68,68,0.2); }
-.badge-High      { background: rgba(245,158,11,0.15); color: #FBBF24; border: 1px solid rgba(245,158,11,0.2); }
-.badge-Medium    { background: rgba(16,185,129,0.12); color: #34D399; border: 1px solid rgba(16,185,129,0.2); }
-.badge-OK        { background: rgba(59,130,246,0.12); color: #60A5FA; border: 1px solid rgba(59,130,246,0.2); }
-.badge-A         { background: rgba(239,68,68,0.15);  color: #F87171; border: 1px solid rgba(239,68,68,0.2); }
-.badge-B         { background: rgba(245,158,11,0.15); color: #FBBF24; border: 1px solid rgba(245,158,11,0.2); }
-.badge-C         { background: rgba(59,130,246,0.12); color: #60A5FA; border: 1px solid rgba(59,130,246,0.2); }
-.badge-Critical2 { background: rgba(139,92,246,0.15); color: #A78BFA; border: 1px solid rgba(139,92,246,0.2); }
-.badge-Non-Critical { background: rgba(16,185,129,0.12); color: #34D399; border: 1px solid rgba(16,185,129,0.2); }
+.badge-Critical  { background: rgba(220,38,38,0.10);  color: #B91C1C; border: 1px solid rgba(220,38,38,0.25); }
+.badge-High      { background: rgba(217,119,6,0.10); color: #92400E; border: 1px solid rgba(217,119,6,0.25); }
+.badge-Medium    { background: rgba(5,150,105,0.10); color: #065F46; border: 1px solid rgba(5,150,105,0.25); }
+.badge-OK        { background: rgba(37,99,235,0.10); color: #1D4ED8; border: 1px solid rgba(37,99,235,0.25); }
+.badge-A         { background: rgba(220,38,38,0.10);  color: #B91C1C; border: 1px solid rgba(220,38,38,0.25); }
+.badge-B         { background: rgba(217,119,6,0.10); color: #92400E; border: 1px solid rgba(217,119,6,0.25); }
+.badge-C         { background: rgba(37,99,235,0.10); color: #1D4ED8; border: 1px solid rgba(37,99,235,0.25); }
+.badge-Critical2 { background: rgba(124,58,237,0.10); color: #5B21B6; border: 1px solid rgba(124,58,237,0.25); }
+.badge-Non-Critical { background: rgba(5,150,105,0.10); color: #065F46; border: 1px solid rgba(5,150,105,0.25); }
 
 /* ── BAR ── */
 .bar-wrap { display: flex; align-items: center; gap: 6px; }
-.bar-bg { flex: 1; min-width: 50px; height: 5px; background: var(--bg-4); border-radius: 3px; overflow: hidden; }
+.bar-bg { flex: 1; min-width: 50px; height: 5px; background: #E2E8F0; border-radius: 3px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 3px; }
 
 /* ── EXPORT BTN GROUP ── */
 .export-row { display: flex; gap: 8px; align-items: center; }
 .btn-export {
   display: flex; align-items: center; gap: 5px;
-  background: var(--bg-3); border: 1px solid var(--border);
+  background: white; border: 1px solid var(--border);
   color: var(--text-2); padding: 5px 12px;
   border-radius: var(--radius-sm);
   font-size: 11px; cursor: pointer; font-family: var(--font-body);
@@ -299,11 +305,11 @@ tr:hover td { background: var(--bg-3); }
   border: 1px solid var(--border);
   border-radius: var(--radius); padding: 18px;
 }
-.ai-card h3 { font-size: 12px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+.ai-card h3 { font-size: 12px; font-weight: 600; color: #0F172A; margin-bottom: 4px; }
 .ai-card p  { font-size: 11px; color: var(--text-3); margin-bottom: 14px; }
 .quick-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .quick-btn {
-  background: var(--bg-3); border: 1px solid var(--border);
+  background: white; border: 1px solid var(--border);
   color: var(--text-3); font-size: 10px;
   padding: 4px 10px; border-radius: 14px;
   cursor: pointer; font-family: var(--font-body);
@@ -319,20 +325,20 @@ tr:hover td { background: var(--bg-3); }
   padding: 9px 13px; border-radius: var(--radius-sm);
   font-size: 12px; line-height: 1.55;
 }
-.ai-msg.bot { background: var(--bg-3); color: var(--text-2); border-left: 2px solid var(--accent); }
-.ai-msg.usr { background: rgba(16,185,129,0.08); color: #A7F3D0; text-align: right; border-right: 2px solid var(--green); }
+.ai-msg.bot { background: #EFF6FF; color: var(--text-2); border-left: 3px solid var(--accent); }
+.ai-msg.usr { background: rgba(5,150,105,0.08); color: #065F46; text-align: right; border-right: 3px solid var(--green); }
 .ai-input-row { display: flex; gap: 8px; }
 .ai-input {
-  flex: 1; background: var(--bg-3); border: 1px solid var(--border);
-  color: var(--text-1); padding: 8px 13px;
+  flex: 1; background: white; border: 1px solid var(--border);
+  color: #0F172A; padding: 8px 13px;
   border-radius: var(--radius-sm); font-size: 12px;
   font-family: var(--font-body); outline: none;
 }
 .ai-input:focus { border-color: var(--accent); }
 .ai-key-input {
   width: 100%;
-  background: var(--bg-3); border: 1px solid var(--border);
-  color: var(--text-1); padding: 8px 13px;
+  background: white; border: 1px solid var(--border);
+  color: #0F172A; padding: 8px 13px;
   border-radius: var(--radius-sm); font-size: 12px;
   font-family: var(--font-mono); outline: none;
   margin-bottom: 10px;
@@ -346,12 +352,12 @@ tr:hover td { background: var(--bg-3); }
   transition: background 0.15s;
 }
 .ai-send:hover { background: #2563EB; }
-.ai-send:disabled { background: var(--bg-4); color: var(--text-3); cursor: not-allowed; }
+.ai-send:disabled { background: #E2E8F0; color: var(--text-3); cursor: not-allowed; }
 
 /* ── PROGRESS RING ── */
 .spinner {
   display: inline-block; width: 12px; height: 12px;
-  border: 2px solid rgba(59,130,246,0.2);
+  border: 2px solid rgba(37,99,235,0.15);
   border-top-color: var(--accent);
   border-radius: 50%; animation: spin 0.6s linear infinite;
   vertical-align: middle; margin-right: 6px;
@@ -361,59 +367,60 @@ tr:hover td { background: var(--bg-3); }
 /* ── REFRESH STATUS ── */
 .refresh-bar {
   position: fixed; bottom: 16px; right: 16px;
-  background: var(--bg-2); border: 1px solid var(--border);
+  background: white; border: 1px solid var(--border);
   border-radius: var(--radius); padding: 10px 14px;
   font-size: 11px; color: var(--text-3);
   display: flex; align-items: center; gap: 8px; z-index: 200;
+  box-shadow: var(--shadow);
 }
-.refresh-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
-.refresh-dot.warning { background: var(--amber); }
+.refresh-dot { width: 7px; height: 7px; border-radius: 50%; background: #059669; }
+.refresh-dot.warning { background: #D97706; }
 
 /* ── SETUP MODAL ── */
 .modal-overlay {
   position: fixed; inset: 0;
-  background: rgba(7,11,20,0.85);
+  background: rgba(15,23,42,0.5);
   display: flex; align-items: center; justify-content: center;
   z-index: 300;
 }
 .modal {
-  background: var(--bg-2); border: 1px solid var(--border-hover);
+  background: white; border: 1px solid var(--border-hover);
   border-radius: 14px; padding: 30px;
   width: 520px; max-width: 94vw;
 }
-.modal h2 { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--text-1); margin-bottom: 6px; }
+.modal h2 { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: #0F172A; margin-bottom: 6px; }
 .modal p  { font-size: 12px; color: var(--text-3); margin-bottom: 18px; line-height: 1.6; }
 .modal-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
-.modal-tab { background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-3); font-size: 12px; font-family: var(--font-body); padding: 7px 14px; cursor: pointer; }
+.modal-tab { background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-2); font-size: 12px; font-family: var(--font-body); padding: 7px 14px; cursor: pointer; }
 .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 .modal-tab-content { display: none; }
 .modal-tab-content.active { display: block; }
 .drop-zone {
-  border: 1.5px dashed var(--border-hover);
+  border: 1.5px dashed var(--border-hover); background: #FAFBFF;
   border-radius: var(--radius); padding: 30px;
   text-align: center; cursor: pointer;
   transition: all 0.2s; margin-bottom: 14px;
 }
-.drop-zone:hover { border-color: var(--accent); background: var(--accent-glow); }
+.drop-zone:hover { border-color: var(--accent); background: rgba(37,99,235,0.06); }
 .drop-zone p { font-size: 12px; color: var(--text-3); margin: 0; }
 .drop-zone .drop-icon { font-size: 28px; margin-bottom: 8px; }
 .url-row { display: flex; gap: 8px; }
 .url-input {
-  flex: 1; background: var(--bg-3); border: 1px solid var(--border);
-  color: var(--text-1); padding: 8px 12px;
+  flex: 1; background: white; border: 1px solid var(--border);
+  color: #0F172A; padding: 8px 12px;
   border-radius: var(--radius-sm); font-size: 12px;
   font-family: var(--font-mono); outline: none;
 }
 .url-input:focus { border-color: var(--accent); }
-.inline-code { font-family: var(--font-mono); background: var(--bg-3); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 10px; color: var(--accent2); }
+.inline-code { font-family: var(--font-mono); background: var(--bg-3); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-size: 10px; color: var(--accent); }
 
 /* ── ADVANCED ANALYTICS ── */
 .adv-kpi-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
 .adv-section { margin-bottom: 24px; }
 .adv-section-title {
   font-family: var(--font-head);
-  font-size: 11px; font-weight: 600;
-  color: var(--accent2);
+  font-size: 11px; font-weight: 700;
+  color: var(--accent);
   text-transform: uppercase; letter-spacing: 1px;
   margin-bottom: 12px;
   padding-bottom: 6px;
@@ -430,6 +437,7 @@ tr:hover td { background: var(--bg-3); }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
 }
 .metric-card:hover { border-color: var(--border-hover); }
 .metric-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 5px; }
@@ -569,10 +577,10 @@ tr:hover td { background: var(--bg-3); }
     <div class="chart-card" style="margin-bottom:14px;">
       <h3>Scatter plot — days of inventory remaining vs supplier lead time · bubble size = inventory value</h3>
       <div class="chart-legend">
-        <span><span class="legend-dot" style="background:rgba(239,68,68,0.8)"></span>Critical</span>
-        <span><span class="legend-dot" style="background:rgba(245,158,11,0.8)"></span>High</span>
-        <span><span class="legend-dot" style="background:rgba(16,185,129,0.8)"></span>Medium</span>
-        <span><span class="legend-dot" style="background:rgba(59,130,246,0.7)"></span>OK</span>
+        <span><span class="legend-dot" style="background:rgba(220,38,38,0.85)"></span>Critical</span>
+        <span><span class="legend-dot" style="background:rgba(217,119,6,0.85)"></span>High</span>
+        <span><span class="legend-dot" style="background:rgba(5,150,105,0.75)"></span>Medium</span>
+        <span><span class="legend-dot" style="background:rgba(37,99,235,0.65)"></span>OK</span>
       </div>
       <div style="position:relative;height:320px;"><canvas id="scatterChart"></canvas></div>
     </div>
@@ -774,10 +782,10 @@ tr:hover td { background: var(--bg-3); }
         <h3>AI Inventory Analyst</h3>
         <p>Powered by Claude AI. Provide your Anthropic API key to enable live analysis of your inventory data.</p>
 
-        <div id="aiKeySection" style="margin-bottom:14px; background:var(--bg-3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
-          <div style="font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:6px;">🔑 API Key Required</div>
-          <div style="font-size:10px;color:var(--text-3);margin-bottom:10px;line-height:1.6;">
-            1. Go to <strong style="color:var(--accent)">console.anthropic.com</strong> → API Keys → Create Key<br>
+        <div id="aiKeySection" style="margin-bottom:14px; background:#F0F7FF; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+          <div style="font-size:11px;font-weight:600;color:#374151;margin-bottom:6px;">🔑 API Key Required</div>
+          <div style="font-size:10px;color:#6B7280;margin-bottom:10px;line-height:1.6;">
+            1. Go to <strong style="color:#2563EB">console.anthropic.com</strong> → API Keys → Create Key<br>
             2. Paste your key below (stored locally in your browser only)<br>
             3. Never share your API key publicly
           </div>
@@ -785,7 +793,7 @@ tr:hover td { background: var(--bg-3); }
           <div style="display:flex;gap:8px;">
             <button class="btn-accent" onclick="saveAPIKey()" style="font-size:11px;padding:6px 14px;">Save Key</button>
             <button class="btn-sm" onclick="testAPIKey()" style="font-size:11px;">Test Connection</button>
-            <div id="keyStatus" style="font-size:10px;color:var(--text-3);align-self:center;"></div>
+            <div id="keyStatus" style="font-size:10px;color:#6B7280;align-self:center;"></div>
           </div>
         </div>
 
@@ -849,44 +857,44 @@ tr:hover td { background: var(--bg-3); }
 
     <div id="modal-tab-file" class="modal-tab-content active">
       <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileImport').click()"
-        ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+        ondragover="event.preventDefault();this.style.borderColor='#2563EB'"
         ondragleave="this.style.borderColor=''"
         ondrop="handleFileDrop(event)">
         <div class="drop-icon">📁</div>
-        <p style="font-weight:600;color:var(--text-1);margin-bottom:4px;">Drop file here or click to browse</p>
+        <p style="font-weight:600;color:#0F172A;margin-bottom:4px;">Drop file here or click to browse</p>
         <p>Supports: CSV, XLSX, JSON · Max 50MB</p>
       </div>
       <input type="file" id="fileImport" class="file-input-hidden" accept=".csv,.xlsx,.json" onchange="handleFileImport(event)">
-      <div id="fileStatus" style="font-size:11px;color:var(--text-3);min-height:20px;"></div>
+      <div id="fileStatus" style="font-size:11px;color:#6B7280;min-height:20px;"></div>
     </div>
 
     <div id="modal-tab-url" class="modal-tab-content">
-      <p style="font-size:11px;color:var(--text-3);margin-bottom:10px;">Enter a public URL that returns CSV, JSON, or XLSX. The dashboard will fetch this URL every 5 minutes automatically.</p>
+      <p style="font-size:11px;color:#6B7280;margin-bottom:10px;">Enter a public URL that returns CSV, JSON, or XLSX. The dashboard will fetch this URL every 5 minutes automatically.</p>
       <div class="url-row" style="margin-bottom:10px;">
         <input class="url-input" id="remoteUrl" placeholder="https://yourdomain.com/inventory-export.csv">
         <button class="btn-accent" onclick="connectRemoteURL()" style="white-space:nowrap;font-size:11px;padding:8px 14px;">Connect</button>
       </div>
-      <div id="urlStatus" style="font-size:11px;color:var(--text-3);"></div>
+      <div id="urlStatus" style="font-size:11px;color:#6B7280;"></div>
     </div>
 
     <div id="modal-tab-script" class="modal-tab-content">
-      <p style="font-size:11px;color:var(--text-3);margin-bottom:10px;">
+      <p style="font-size:11px;color:#6B7280;margin-bottom:10px;">
         For GitHub deployment, place <span class="inline-code">inventory_data.js</span> in the same folder as this HTML file.
         The dashboard loads it automatically on start.<br><br>
         The data file must set <span class="inline-code">window.INVENTORY_DATA = [...]</span> — an array of SKU objects.
         It is already included in the download package.
       </p>
       <button class="btn-sm" onclick="reloadDataScript()" style="font-size:11px;">↻ Reload inventory_data.js</button>
-      <div id="scriptStatus" style="font-size:11px;color:var(--text-3);margin-top:8px;"></div>
+      <div id="scriptStatus" style="font-size:11px;color:#6B7280;margin-top:8px;"></div>
     </div>
 
     <div id="modal-tab-format" class="modal-tab-content">
-      <p style="font-size:11px;color:var(--text-3);margin-bottom:10px;">Required core columns (header names, case-insensitive). Extended v2.0 fields unlock Advanced Analytics tab:</p>
+      <p style="font-size:11px;color:#6B7280;margin-bottom:10px;">Required core columns (header names, case-insensitive). Extended v2.0 fields unlock Advanced Analytics tab:</p>
       <table style="width:100%;font-size:10px;">
         <thead><tr>
-          <th style="padding:5px 8px;text-align:left;background:var(--bg-3);color:var(--text-3);">Column</th>
-          <th style="padding:5px 8px;text-align:left;background:var(--bg-3);color:var(--text-3);">Type</th>
-          <th style="padding:5px 8px;text-align:left;background:var(--bg-3);color:var(--text-3);">Description</th>
+          <th style="padding:5px 8px;text-align:left;background:#F7F9FC;color:#6B7280;">Column</th>
+          <th style="padding:5px 8px;text-align:left;background:#F7F9FC;color:#6B7280;">Type</th>
+          <th style="padding:5px 8px;text-align:left;background:#F7F9FC;color:#6B7280;">Description</th>
         </tr></thead>
         <tbody id="formatTableBody"></tbody>
       </table>
@@ -1252,9 +1260,9 @@ function startAutoRefresh() {
 
 function manualRefresh() {
   const dot = document.getElementById('refreshDot');
-  dot.style.background = 'var(--amber)';
+  dot.style.background = '#D97706';
   if (remoteDataUrl) {
-    fetchRemoteData(remoteDataUrl, false).then(() => dot.style.background = 'var(--green)');
+    fetchRemoteData(remoteDataUrl, false).then(() => dot.style.background = '#059669');
   } else {
     if (window.INVENTORY_DATA) ALL_SKUS = calcABC(calcKPIs(window.INVENTORY_DATA));
     applyOverviewFilter();
@@ -1262,12 +1270,12 @@ function manualRefresh() {
     renderSKUTable();
     renderAdvanced();
     onDataLoaded('Manual refresh');
-    setTimeout(() => dot.style.background = 'var(--green)', 400);
+    setTimeout(() => dot.style.background = '#059669', 400);
   }
 }
 
 function updateRefreshDot() {
-  document.getElementById('refreshDot').style.background = 'var(--green)';
+  document.getElementById('refreshDot').style.background = '#059669';
 }
 
 // ══════════════════════════════════════════════
@@ -1355,7 +1363,7 @@ function renderOverviewCharts(skus) {
     type: 'doughnut',
     data: {
       labels: ['Critical','High','Medium','OK'],
-      datasets: [{ data: ['Critical','High','Medium','OK'].map(u => skus.filter(s => s.urgency === u).length), backgroundColor: ['#EF4444','#F59E0B','#10B981','#3B82F6'], borderWidth: 0, hoverOffset: 4 }]
+      datasets: [{ data: ['Critical','High','Medium','OK'].map(u => skus.filter(s => s.urgency === u).length), backgroundColor: ['#DC2626','#D97706','#059669','#2563EB'], borderWidth: 0, hoverOffset: 4 }]
     },
     options: { responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{display:false}, tooltip:{callbacks:{label: ctx => ` ${ctx.label}: ${ctx.parsed}`}} } }
   });
@@ -1367,25 +1375,25 @@ function renderOverviewCharts(skus) {
     data: {
       labels: c2cats.map(c => safeSplit(c)),
       datasets: [
-        { label: 'Avg days left', data: c2cats.map(c => { const s=skus.filter(x=>x.cat===c); return s.length?Math.round(s.reduce((a,x)=>a+x.daysRemaining,0)/s.length):0; }), backgroundColor: '#3B82F6', borderWidth:0 },
-        { label: 'Avg lead time', data: c2cats.map(c => { const s=skus.filter(x=>x.cat===c); return s.length?Math.round(s.reduce((a,x)=>a+x.leadDays,0)/s.length):0; }), backgroundColor: '#F59E0B', borderWidth:0 }
+        { label: 'Avg days left', data: c2cats.map(c => { const s=skus.filter(x=>x.cat===c); return s.length?Math.round(s.reduce((a,x)=>a+x.daysRemaining,0)/s.length):0; }), backgroundColor: '#2563EB', borderWidth:0 },
+        { label: 'Avg lead time', data: c2cats.map(c => { const s=skus.filter(x=>x.cat===c); return s.length?Math.round(s.reduce((a,x)=>a+x.leadDays,0)/s.length):0; }), backgroundColor: '#D97706', borderWidth:0 }
       ]
     },
-    options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}}}, plugins:{legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}}} }
+    options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#6B7280',font:{size:9}},grid:{color:'rgba(37,99,235,0.06)'}},y:{ticks:{color:'#6B7280',font:{size:9}},grid:{color:'rgba(37,99,235,0.06)'}}}, plugins:{legend:{labels:{color:'#374151',boxWidth:8,font:{size:10}}}} }
   });
 
   destroyChart('c3');
   charts['c3'] = new Chart(document.getElementById('c3'), {
     type: 'bar',
-    data: { labels: cats.map(c=>safeSplit(c)), datasets:[{label:'Value K AED', data:cats.map(c=>Math.round(skus.filter(x=>x.cat===c).reduce((a,s)=>a+s.inventoryValue,0)/1000)), backgroundColor:'#06B6D4', borderWidth:0}] },
-    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{display:false}}}, plugins:{legend:{display:false}} }
+    data: { labels: cats.map(c=>safeSplit(c)), datasets:[{label:'Value K AED', data:cats.map(c=>Math.round(skus.filter(x=>x.cat===c).reduce((a,s)=>a+s.inventoryValue,0)/1000)), backgroundColor:'#0891B2', borderWidth:0}] },
+    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#6B7280',font:{size:9}},grid:{color:'rgba(37,99,235,0.06)'}},y:{ticks:{color:'#6B7280',font:{size:9}},grid:{display:false}}}, plugins:{legend:{display:false}} }
   });
 
   destroyChart('c4');
   charts['c4'] = new Chart(document.getElementById('c4'), {
     type: 'bar',
-    data: { labels: cats.slice(0,9).map(c=>safeSplit(c)), datasets:[{label:'Below safety stock', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock<x.safetyStock).length), backgroundColor:'#EF4444', borderWidth:0}] },
-    options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}}}, plugins:{legend:{display:false}} }
+    data: { labels: cats.slice(0,9).map(c=>safeSplit(c)), datasets:[{label:'Below safety stock', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock<x.safetyStock).length), backgroundColor:'#DC2626', borderWidth:0}] },
+    options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#6B7280',font:{size:9}},grid:{color:'rgba(37,99,235,0.06)'}},y:{ticks:{color:'#6B7280',font:{size:9}},grid:{color:'rgba(37,99,235,0.06)'}}}, plugins:{legend:{display:false}} }
   });
 
   destroyChart('c5');
@@ -1394,11 +1402,11 @@ function renderOverviewCharts(skus) {
     data: {
       labels: cats.slice(0,9).map(c=>safeSplit(c)),
       datasets: [
-        { label:'Above target', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock>=x.targetStock).length), backgroundColor:'#10B981', borderWidth:0 },
+        { label:'Above target', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock>=x.targetStock).length), backgroundColor:'#059669', borderWidth:0 },
         { label:'Below target', data:cats.slice(0,9).map(c=>skus.filter(x=>x.cat===c&&x.currentStock< x.targetStock).length), backgroundColor:'#7F1D1D', borderWidth:0 }
       ]
     },
-    options: { responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true,ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{stacked:true,ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}}}, plugins:{legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}}} }
+    options: { responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true,ticks:{color:'#6B7280',font:{size:9}},grid:{color:'rgba(37,99,235,0.06)'}},y:{stacked:true,ticks:{color:'#6B7280',font:{size:9}},grid:{color:'rgba(37,99,235,0.06)'}}}, plugins:{legend:{labels:{color:'#374151',boxWidth:8,font:{size:10}}}} }
   });
 }
 
@@ -1411,7 +1419,7 @@ function renderCriticalTable(skus) {
     .slice(0, ovCat ? 999 : 10);
 
   if (!top.length) {
-    document.getElementById('criticalTable').innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-3);font-size:12px;">No critical items' + (ovCat ? ' in this category' : '') + '</div>';
+    document.getElementById('criticalTable').innerHTML = '<div style="padding:24px;text-align:center;color:#6B7280;font-size:12px;">No critical items' + (ovCat ? ' in this category' : '') + '</div>';
     return;
   }
 
@@ -1427,25 +1435,25 @@ function renderCriticalTable(skus) {
       return `<tr>
         <td class="mono">${s.sku}</td>
         <td>${s.name}</td>
-        <td style="color:var(--text-3);font-size:10px;">${s.cat}</td>
+        <td style="color:#6B7280;font-size:10px;">${s.cat}</td>
         <td>${s.currentStock.toLocaleString()} ${s.unit}</td>
         <td>${s.safetyStock.toLocaleString()}</td>
         <td>${s.reorderPoint.toLocaleString()}</td>
         <td>${s.targetStock.toLocaleString()}</td>
-        <td style="color:${ratio<1?'var(--red)':'var(--amber)'}">${s.daysRemaining}d</td>
+        <td style="color:${ratio<1?'#DC2626':'#D97706'}">${s.daysRemaining}d</td>
         <td>${s.leadDays}d</td>
         <td>
           <div class="bar-wrap">
-            <div class="bar-bg"><div class="bar-fill" style="width:${Math.min(100,Math.abs(s.stockGapPct))}%;background:${s.stockGapPct<0?'var(--red)':'var(--green)'}"></div></div>
-            <span style="font-size:10px;color:${s.stockGapPct<0?'var(--red)':'var(--green)'}">${s.stockGapPct.toFixed(0)}%</span>
+            <div class="bar-bg"><div class="bar-fill" style="width:${Math.min(100,Math.abs(s.stockGapPct))}%;background:${s.stockGapPct<0?'#DC2626':'#059669'}"></div></div>
+            <span style="font-size:10px;color:${s.stockGapPct<0?'#DC2626':'#059669'}">${s.stockGapPct.toFixed(0)}%</span>
           </div>
         </td>
-        <td style="color:var(--accent2);">${s.eoq.toLocaleString()}</td>
-        <td style="color:var(--text-1);">${s.reorderQty.toLocaleString()}</td>
-        <td style="color:var(--amber);">AED ${s.reorderValue.toLocaleString()}</td>
+        <td style="color:#0891B2;">${s.eoq.toLocaleString()}</td>
+        <td style="color:#0F172A;">${s.reorderQty.toLocaleString()}</td>
+        <td style="color:#D97706;">AED ${s.reorderValue.toLocaleString()}</td>
         <td><span class="badge badge-${s.abcClass}">${s.abcClass}</span></td>
-        <td><span style="font-family:var(--font-mono);font-size:10px;color:${s.criticalityScore>=7?'var(--red)':s.criticalityScore>=4?'var(--amber)':'var(--green)'}">${s.criticalityScore.toFixed(1)}</span></td>
-        <td style="color:var(--text-3);font-size:10px;">${s.supplier}</td>
+        <td><span style="font-family:var(--font-mono);font-size:10px;color:${s.criticalityScore>=7?'#DC2626':s.criticalityScore>=4?'#D97706':'#059669'}">${s.criticalityScore.toFixed(1)}</span></td>
+        <td style="color:#6B7280;font-size:10px;">${s.supplier}</td>
       </tr>`;
     }).join('')}
     </tbody>
@@ -1495,17 +1503,17 @@ function renderScatterChart(data) {
   scatterChart = new Chart(document.getElementById('scatterChart'), {
     type: 'bubble',
     data: { datasets: [
-      { label:'Critical', data:byUrgency.Critical, backgroundColor:'rgba(239,68,68,0.75)',  borderColor:'#B91C1C', borderWidth:1 },
-      { label:'High',     data:byUrgency.High,     backgroundColor:'rgba(245,158,11,0.75)', borderColor:'#92400E', borderWidth:1 },
-      { label:'Medium',   data:byUrgency.Medium,   backgroundColor:'rgba(16,185,129,0.65)', borderColor:'#065F46', borderWidth:1 },
-      { label:'OK',       data:byUrgency.OK,       backgroundColor:'rgba(59,130,246,0.55)', borderColor:'#1E40AF', borderWidth:1 },
+      { label:'Critical', data:byUrgency.Critical, backgroundColor:'rgba(220,38,38,0.85)',  borderColor:'#991B1B', borderWidth:1 },
+      { label:'High',     data:byUrgency.High,     backgroundColor:'rgba(217,119,6,0.85)', borderColor:'#78350F', borderWidth:1 },
+      { label:'Medium',   data:byUrgency.Medium,   backgroundColor:'rgba(5,150,105,0.75)', borderColor:'#064E3B', borderWidth:1 },
+      { label:'OK',       data:byUrgency.OK,       backgroundColor:'rgba(37,99,235,0.65)', borderColor:'#1E3A8A', borderWidth:1 },
     ]},
     options: { responsive:true, maintainAspectRatio:false,
       scales: {
-        x: { title:{display:true,text:'Lead time (days)',color:'#5A6B8A',font:{size:10}}, ticks:{color:'#5A6B8A',font:{size:9}}, grid:{color:'rgba(99,130,183,0.08)'}, min:0, max:35 },
-        y: { title:{display:true,text:'Days of inventory remaining',color:'#5A6B8A',font:{size:10}}, ticks:{color:'#5A6B8A',font:{size:9}}, grid:{color:'rgba(99,130,183,0.08)'}, min:-5, max:95 }
+        x: { title:{display:true,text:'Lead time (days)',color:'#6B7280',font:{size:10}}, ticks:{color:'#6B7280',font:{size:9}}, grid:{color:'rgba(37,99,235,0.06)'}, min:0, max:35 },
+        y: { title:{display:true,text:'Days of inventory remaining',color:'#6B7280',font:{size:10}}, ticks:{color:'#6B7280',font:{size:9}}, grid:{color:'rgba(37,99,235,0.06)'}, min:-5, max:95 }
       },
-      plugins: { legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}}, tooltip:{callbacks:{label:ctx=>{ const d=ctx.raw._d; return d?[`${d.sku} — ${d.name}`,`Days left: ${d.daysRemaining}`,`Lead: ${d.leadDays}d`,`Gap: ${d.stockGapPct}%`]:[]; }}} }
+      plugins: { legend:{labels:{color:'#374151',boxWidth:8,font:{size:10}}}, tooltip:{callbacks:{label:ctx=>{ const d=ctx.raw._d; return d?[`${d.sku} — ${d.name}`,`Days left: ${d.daysRemaining}`,`Lead: ${d.leadDays}d`,`Gap: ${d.stockGapPct}%`]:[]; }}} }
     }
   });
 }
@@ -1527,16 +1535,16 @@ function renderUrgencyTable(data) {
     ${shown.map(s => {
       const ratio = s.daysRemaining / Math.max(1, s.leadDays);
       const barW  = Math.min(100, ratio * 20);
-      const barC  = ratio < 1 ? 'var(--red)' : ratio < 1.5 ? 'var(--amber)' : 'var(--green)';
+      const barC  = ratio < 1 ? '#DC2626' : ratio < 1.5 ? '#D97706' : '#059669';
       return `<tr>
         <td class="mono">${s.sku}</td>
         <td>${s.name}</td>
-        <td style="color:var(--text-3);font-size:10px;">${s.cat}</td>
+        <td style="color:#6B7280;font-size:10px;">${s.cat}</td>
         <td>${s.currentStock.toLocaleString()}</td>
         <td>${s.safetyStock.toLocaleString()}</td>
         <td>${s.reorderPoint.toLocaleString()}</td>
         <td>${s.targetStock.toLocaleString()}</td>
-        <td style="color:${ratio<1?'var(--red)':ratio<1.5?'var(--amber)':'var(--green)'}">${s.daysRemaining}d</td>
+        <td style="color:${ratio<1?'#DC2626':ratio<1.5?'#D97706':'#059669'}">${s.daysRemaining}d</td>
         <td>${s.leadDays}d</td>
         <td>
           <div class="bar-wrap">
@@ -1589,26 +1597,26 @@ function renderSKUTable() {
     ${shown.map(s => `<tr>
       <td class="mono">${s.sku}</td>
       <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;">${s.name}</td>
-      <td style="color:var(--text-3);font-size:10px;">${safeSplit(s.cat)}</td>
-      <td style="color:var(--text-3);font-size:10px;">${s.unit}</td>
+      <td style="color:#6B7280;font-size:10px;">${safeSplit(s.cat)}</td>
+      <td style="color:#6B7280;font-size:10px;">${s.unit}</td>
       <td>${s.currentStock.toLocaleString()}</td>
       <td>${s.safetyStock.toLocaleString()}</td>
       <td>${s.reorderPoint.toLocaleString()}</td>
       <td>${s.thresholdPoint.toLocaleString()}</td>
       <td>${s.targetStock.toLocaleString()}</td>
-      <td style="color:${s.stockGapPct<-15?'var(--red)':s.stockGapPct<0?'var(--amber)':'var(--green)'}">${s.stockGapPct.toFixed(0)}%</td>
+      <td style="color:${s.stockGapPct<-15?'#DC2626':s.stockGapPct<0?'#D97706':'#059669'}">${s.stockGapPct.toFixed(0)}%</td>
       <td>${s.avgDailySales}</td>
-      <td style="color:${s.daysRemaining<s.leadDays?'var(--red)':'var(--text-2)'}">${s.daysRemaining}d</td>
+      <td style="color:${s.daysRemaining<s.leadDays?'#DC2626':'var(--text-2)'}">${s.daysRemaining}d</td>
       <td>${s.leadDays}d</td>
       <td>${s.reorderQty.toLocaleString()}</td>
-      <td style="color:var(--accent2);">${s.eoq.toLocaleString()}</td>
+      <td style="color:#0891B2;">${s.eoq.toLocaleString()}</td>
       <td>${s.recommendedStock.toLocaleString()}</td>
-      <td style="color:${s.purchaseRecommendationQty>0?'var(--amber)':'var(--green)'};">${s.purchaseRecommendationQty.toLocaleString()}</td>
-      <td style="color:var(--amber);">${s.reorderValue.toLocaleString()}</td>
+      <td style="color:${s.purchaseRecommendationQty>0?'#D97706':'#059669'};">${s.purchaseRecommendationQty.toLocaleString()}</td>
+      <td style="color:#D97706;">${s.reorderValue.toLocaleString()}</td>
       <td>${s.inventoryValue.toLocaleString()}</td>
       <td><span class="badge badge-${s.abcClass}">${s.abcClass}</span></td>
-      <td style="font-family:var(--font-mono);font-size:10px;color:${s.criticalityScore>=7?'var(--red)':s.criticalityScore>=4?'var(--amber)':'var(--green)'}">${s.criticalityScore.toFixed(1)}</td>
-      <td style="color:var(--text-3);font-size:10px;">${s.supplier}</td>
+      <td style="font-family:var(--font-mono);font-size:10px;color:${s.criticalityScore>=7?'#DC2626':s.criticalityScore>=4?'#D97706':'#059669'}">${s.criticalityScore.toFixed(1)}</td>
+      <td style="color:#6B7280;font-size:10px;">${s.supplier}</td>
       <td><span class="badge badge-${s.urgency}">${s.urgency}</span></td>
     </tr>`).join('')}
     </tbody>
@@ -1654,14 +1662,14 @@ function renderAdvanced() {
   destroyChart('advC1');
   charts['advC1'] = new Chart(document.getElementById('advC1'), {
     type: 'bar',
-    data: { labels: cats.map(c=>safeSplit(c)), datasets: [{ label:'Turnover/Month', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>s.invTurnoverMonth)*100)/100), backgroundColor:'#3B82F6', borderWidth:0 }] },
+    data: { labels: cats.map(c=>safeSplit(c)), datasets: [{ label:'Turnover/Month', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>s.invTurnoverMonth)*100)/100), backgroundColor:'#2563EB', borderWidth:0 }] },
     options: chartOpts('Turnover ×')
   });
 
   destroyChart('advC2');
   charts['advC2'] = new Chart(document.getElementById('advC2'), {
     type: 'bar',
-    data: { labels: cats.map(c=>safeSplit(c)), datasets: [{ label:'DIO (days)', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>Math.min(s.dio,120))*10)/10), backgroundColor:'#06B6D4', borderWidth:0 }] },
+    data: { labels: cats.map(c=>safeSplit(c)), datasets: [{ label:'DIO (days)', data: cats.map(c => Math.round(avg(skus.filter(x=>x.cat===c), s=>Math.min(s.dio,120))*10)/10), backgroundColor:'#0891B2', borderWidth:0 }] },
     options: chartOpts('Days')
   });
 
@@ -1683,7 +1691,7 @@ function renderAdvanced() {
   destroyChart('advC3');
   charts['advC3'] = new Chart(document.getElementById('advC3'), {
     type: 'bar',
-    data: { labels: cats.map(c=>safeSplit(c)), datasets:[{ label:'Accuracy %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct)*100)/100), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct); return v<95?'#EF4444':v<98?'#F59E0B':'#10B981'; }), borderWidth:0 }] },
+    data: { labels: cats.map(c=>safeSplit(c)), datasets:[{ label:'Accuracy %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct)*100)/100), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.invAccuracyMonthPct); return v<95?'#DC2626':v<98?'#D97706':'#059669'; }), borderWidth:0 }] },
     options: chartOpts('%', {min:90, max:100})
   });
 
@@ -1691,8 +1699,8 @@ function renderAdvanced() {
   charts['advC4'] = new Chart(document.getElementById('advC4'), {
     type: 'bar',
     data: { labels: cats.map(c=>safeSplit(c)), datasets:[
-      { label:'Shrinkage %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.shrinkagePct)*100)/100), backgroundColor:'#EF4444', borderWidth:0 },
-      { label:'Obsolete %',  data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.obsoletePct)*100)/100),  backgroundColor:'#8B5CF6', borderWidth:0 }
+      { label:'Shrinkage %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.shrinkagePct)*100)/100), backgroundColor:'#DC2626', borderWidth:0 },
+      { label:'Obsolete %',  data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.obsoletePct)*100)/100),  backgroundColor:'#7C3AED', borderWidth:0 }
     ]},
     options: chartOpts('%')
   });
@@ -1716,8 +1724,8 @@ function renderAdvanced() {
   charts['advC5'] = new Chart(document.getElementById('advC5'), {
     type: 'bar',
     data: { labels: cats.map(c=>safeSplit(c)), datasets:[
-      { label:'Stockout %',  data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.stockoutRatePct)*100)/100),  backgroundColor:'#EF4444', borderWidth:0 },
-      { label:'Backorder %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.backorderRatePct)*100)/100), backgroundColor:'#F59E0B', borderWidth:0 }
+      { label:'Stockout %',  data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.stockoutRatePct)*100)/100),  backgroundColor:'#DC2626', borderWidth:0 },
+      { label:'Backorder %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.backorderRatePct)*100)/100), backgroundColor:'#D97706', borderWidth:0 }
     ]},
     options: chartOpts('%')
   });
@@ -1726,8 +1734,8 @@ function renderAdvanced() {
   charts['advC6'] = new Chart(document.getElementById('advC6'), {
     type: 'bar',
     data: { labels: cats.map(c=>safeSplit(c)), datasets:[
-      { label:'Fill Rate %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.orderFillRatePct)*100)/100),backgroundColor:'#10B981', borderWidth:0 },
-      { label:'Return Rate %',data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.returnRatePct)*100)/100),  backgroundColor:'#06B6D4', borderWidth:0 }
+      { label:'Fill Rate %', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.orderFillRatePct)*100)/100),backgroundColor:'#059669', borderWidth:0 },
+      { label:'Return Rate %',data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.returnRatePct)*100)/100),  backgroundColor:'#0891B2', borderWidth:0 }
     ]},
     options: chartOpts('%')
   });
@@ -1752,8 +1760,8 @@ function renderAdvanced() {
   charts['advC7'] = new Chart(document.getElementById('advC7'), {
     type: 'bar',
     data: { labels: sups.map(s=>safeSplit(s)), datasets:[
-      { label:'Avg EOQ',         data:sups.map(s=>Math.round(avg(skus.filter(x=>x.supplier===s),x=>x.eoq))), backgroundColor:'#3B82F6', borderWidth:0 },
-      { label:'Avg Reorder Qty', data:sups.map(s=>Math.round(avg(skus.filter(x=>x.supplier===s),x=>x.reorderQty))), backgroundColor:'#F59E0B', borderWidth:0 }
+      { label:'Avg EOQ',         data:sups.map(s=>Math.round(avg(skus.filter(x=>x.supplier===s),x=>x.eoq))), backgroundColor:'#2563EB', borderWidth:0 },
+      { label:'Avg Reorder Qty', data:sups.map(s=>Math.round(avg(skus.filter(x=>x.supplier===s),x=>x.reorderQty))), backgroundColor:'#D97706', borderWidth:0 }
     ]},
     options: chartOpts('Units')
   });
@@ -1762,8 +1770,8 @@ function renderAdvanced() {
   charts['advC8'] = new Chart(document.getElementById('advC8'), {
     type: 'bar',
     data: { labels: cats.map(c=>safeSplit(c)), datasets:[
-      { label:'Safety Stock (simple)', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.safetyStock))), backgroundColor:'#10B981', borderWidth:0 },
-      { label:'Safety Stock (Z-score)', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.safetyStockAdv))), backgroundColor:'#3B82F6', borderWidth:0 }
+      { label:'Safety Stock (simple)', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.safetyStock))), backgroundColor:'#059669', borderWidth:0 },
+      { label:'Safety Stock (Z-score)', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.safetyStockAdv))), backgroundColor:'#2563EB', borderWidth:0 }
     ]},
     options: chartOpts('Units')
   });
@@ -1776,8 +1784,8 @@ function renderAdvanced() {
   destroyChart('advC9');
   charts['advC9'] = new Chart(document.getElementById('advC9'), {
     type: 'doughnut',
-    data: { labels:['A — High Value','B — Medium','C — Low Value'], datasets:[{ data:[aCount,bCount,cCount], backgroundColor:['#EF4444','#F59E0B','#3B82F6'], borderWidth:0 }] },
-    options: { responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{ legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}} } }
+    data: { labels:['A — High Value','B — Medium','C — Low Value'], datasets:[{ data:[aCount,bCount,cCount], backgroundColor:['#DC2626','#D97706','#2563EB'], borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{ legend:{labels:{color:'#374151',boxWidth:8,font:{size:10}}} } }
   });
 
   const scoreRanges = { '1-2':0, '3-4':0, '5-6':0, '7-8':0, '9-10':0 };
@@ -1793,14 +1801,14 @@ function renderAdvanced() {
   destroyChart('advC10');
   charts['advC10'] = new Chart(document.getElementById('advC10'), {
     type: 'bar',
-    data: { labels:Object.keys(scoreRanges), datasets:[{ label:'SKUs', data:Object.values(scoreRanges), backgroundColor:['#10B981','#10B981','#F59E0B','#EF4444','#EF4444'], borderWidth:0 }] },
-    options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:10}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}}}, plugins:{legend:{display:false}} }
+    data: { labels:Object.keys(scoreRanges), datasets:[{ label:'SKUs', data:Object.values(scoreRanges), backgroundColor:['#059669','#059669','#D97706','#DC2626','#DC2626'], borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#6B7280',font:{size:10}},grid:{color:'rgba(37,99,235,0.06)'}},y:{ticks:{color:'#6B7280',font:{size:9}},grid:{color:'rgba(37,99,235,0.06)'}}}, plugins:{legend:{display:false}} }
   });
 
   destroyChart('advC11');
   charts['advC11'] = new Chart(document.getElementById('advC11'), {
     type: 'bar',
-    data: { labels:cats.map(c=>safeSplit(c)), datasets:[{ label:'Avg Criticality Score', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore)*10)/10), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore); return v>=7?'#EF4444':v>=4?'#F59E0B':'#10B981'; }), borderWidth:0 }] },
+    data: { labels:cats.map(c=>safeSplit(c)), datasets:[{ label:'Avg Criticality Score', data:cats.map(c=>Math.round(avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore)*10)/10), backgroundColor:cats.map(c=>{ const v=avg(skus.filter(x=>x.cat===c),s=>s.criticalityScore); return v>=7?'#DC2626':v>=4?'#D97706':'#059669'; }), borderWidth:0 }] },
     options: chartOpts('Score', {min:0, max:10})
   });
 
@@ -1812,10 +1820,10 @@ function chartOpts(yLabel, extra = {}) {
   return {
     responsive: true, maintainAspectRatio: false,
     scales: {
-      x: { ticks:{color:'#5A6B8A',font:{size:9}}, grid:{color:'rgba(99,130,183,0.08)'} },
-      y: { ...extra, title:{display:true,text:yLabel,color:'#5A6B8A',font:{size:9}}, ticks:{color:'#5A6B8A',font:{size:9}}, grid:{color:'rgba(99,130,183,0.08)'} }
+      x: { ticks:{color:'#6B7280',font:{size:9}}, grid:{color:'rgba(37,99,235,0.06)'} },
+      y: { ...extra, title:{display:true,text:yLabel,color:'#6B7280',font:{size:9}}, ticks:{color:'#6B7280',font:{size:9}}, grid:{color:'rgba(37,99,235,0.06)'} }
     },
-    plugins: { legend:{labels:{color:'#94A3C4',boxWidth:8,font:{size:10}}} }
+    plugins: { legend:{labels:{color:'#374151',boxWidth:8,font:{size:10}}} }
   };
 }
 
@@ -1871,37 +1879,37 @@ function renderAdvTable() {
     const [label, field, style] = col;
     const val = s[field];
     if (style === 'mono')   return `<td class="mono">${val}</td>`;
-    if (style === 'text-3') return `<td style="color:var(--text-3);font-size:10px;">${val}</td>`;
-    if (style === 'text-1') return `<td style="color:var(--text-1);">${typeof val==='number'?val.toLocaleString():val}</td>`;
-    if (style === 'amber')  return `<td style="color:var(--amber);">${typeof val==='number'?val.toLocaleString():val}</td>`;
-    if (style === 'accent2')return `<td style="color:var(--accent2);">${typeof val==='number'?val.toLocaleString():val}</td>`;
-    if (style === 'purple') return `<td style="color:var(--purple);">${typeof val==='number'?val.toLocaleString():val}</td>`;
+    if (style === 'text-3') return `<td style="color:#6B7280;font-size:10px;">${val}</td>`;
+    if (style === 'text-1') return `<td style="color:#0F172A;">${typeof val==='number'?val.toLocaleString():val}</td>`;
+    if (style === 'amber')  return `<td style="color:#D97706;">${typeof val==='number'?val.toLocaleString():val}</td>`;
+    if (style === 'accent2')return `<td style="color:#0891B2;">${typeof val==='number'?val.toLocaleString():val}</td>`;
+    if (style === 'purple') return `<td style="color:#7C3AED;">${typeof val==='number'?val.toLocaleString():val}</td>`;
     if (style === 'badge')  return `<td><span class="badge badge-${val}">${val}</span></td>`;
     if (style === 'badge2') return `<td><span class="badge badge-${val==='Critical'?'Critical2':'Non-Critical'}">${val}</span></td>`;
     if (style === 'badgeU') return `<td><span class="badge badge-${val}">${val}</span></td>`;
     if (style === 'acc') {
-      const c = val < 95 ? 'var(--red)' : val < 98 ? 'var(--amber)' : 'var(--green)';
+      const c = val < 95 ? '#DC2626' : val < 98 ? '#D97706' : '#059669';
       return `<td style="color:${c};">${typeof val==='number'?val.toFixed(1)+'%':val}</td>`;
     }
     if (style === 'shrink') {
-      const c = val > 2 ? 'var(--red)' : val > 1 ? 'var(--amber)' : 'var(--green)';
+      const c = val > 2 ? '#DC2626' : val > 1 ? '#D97706' : '#059669';
       return `<td style="color:${c};">${typeof val==='number'?val.toFixed(2)+'%':val}</td>`;
     }
     if (style === 'svc') {
-      const c = val > 5 ? 'var(--red)' : val > 2 ? 'var(--amber)' : 'var(--green)';
+      const c = val > 5 ? '#DC2626' : val > 2 ? '#D97706' : '#059669';
       return `<td style="color:${c};">${typeof val==='number'?val.toFixed(1)+'%':val}</td>`;
     }
     if (style === 'fill') {
-      const c = val < 90 ? 'var(--red)' : val < 95 ? 'var(--amber)' : 'var(--green)';
+      const c = val < 90 ? '#DC2626' : val < 95 ? '#D97706' : '#059669';
       return `<td style="color:${c};">${typeof val==='number'?val.toFixed(1)+'%':val}</td>`;
     }
     if (style === 'score') {
-      const c = val >= 7 ? 'var(--red)' : val >= 4 ? 'var(--amber)' : 'var(--green)';
+      const c = val >= 7 ? '#DC2626' : val >= 4 ? '#D97706' : '#059669';
       return `<td style="font-family:var(--font-mono);font-size:10px;color:${c};">${typeof val==='number'?val.toFixed(1):val}</td>`;
     }
-    if (style === 'x') return `<td style="color:var(--accent2);">${typeof val==='number'?val.toFixed(2)+'×':val}</td>`;
-    if (style === 'd') return `<td style="color:var(--text-2);">${typeof val==='number'?val.toFixed(1)+'d':val}</td>`;
-    return `<td style="color:var(--text-2);">${typeof val==='number'?val.toLocaleString():val}</td>`;
+    if (style === 'x') return `<td style="color:#0891B2;">${typeof val==='number'?val.toFixed(2)+'×':val}</td>`;
+    if (style === 'd') return `<td style="color:#374151;">${typeof val==='number'?val.toFixed(1)+'d':val}</td>`;
+    return `<td style="color:#374151;">${typeof val==='number'?val.toLocaleString():val}</td>`;
   };
 
   document.getElementById('advTable').innerHTML = `<table>
@@ -1997,8 +2005,8 @@ function renderAICharts() {
   destroyChart('aiChart1');
   charts['aiChart1'] = new Chart(document.getElementById('aiChart1'), {
     type: 'bar',
-    data: { labels: cats.slice(0,8).map(c=>safeSplit(c)), datasets:[{ label:'K AED', data:cats.slice(0,8).map(c=>Math.round(ALL_SKUS.filter(s=>s.cat===c&&(s.urgency==='Critical'||s.urgency==='High')).reduce((a,s)=>a+s.reorderValue,0)/1000)), backgroundColor:'#3B82F6', borderWidth:0 }] },
-    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{color:'rgba(99,130,183,0.08)'}},y:{ticks:{color:'#5A6B8A',font:{size:9}},grid:{display:false}}}, plugins:{legend:{display:false}} }
+    data: { labels: cats.slice(0,8).map(c=>safeSplit(c)), datasets:[{ label:'K AED', data:cats.slice(0,8).map(c=>Math.round(ALL_SKUS.filter(s=>s.cat===c&&(s.urgency==='Critical'||s.urgency==='High')).reduce((a,s)=>a+s.reorderValue,0)/1000)), backgroundColor:'#2563EB', borderWidth:0 }] },
+    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{ticks:{color:'#6B7280',font:{size:9}},grid:{color:'rgba(37,99,235,0.06)'}},y:{ticks:{color:'#6B7280',font:{size:9}},grid:{display:false}}}, plugins:{legend:{display:false}} }
   });
 
   const gapSevere = ALL_SKUS.filter(s=>s.stockGapPct<-30).length;
@@ -2009,7 +2017,7 @@ function renderAICharts() {
   destroyChart('aiChart2');
   charts['aiChart2'] = new Chart(document.getElementById('aiChart2'), {
     type: 'doughnut',
-    data: { labels:['Severe <-30%','High -30 to -15%','Mild 0 to -15%','At/Above target'], datasets:[{data:[gapSevere,gapHigh,gapMild,gapOk], backgroundColor:['#EF4444','#F59E0B','#10B981','#3B82F6'], borderWidth:0}] },
+    data: { labels:['Severe <-30%','High -30 to -15%','Mild 0 to -15%','At/Above target'], datasets:[{data:[gapSevere,gapHigh,gapMild,gapOk], backgroundColor:['#DC2626','#D97706','#059669','#2563EB'], borderWidth:0}] },
     options: { responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{legend:{display:false}} }
   });
 }
@@ -2234,10 +2242,10 @@ function buildFormatTable() {
   if (!tb) return;
   tb.innerHTML = fields.map(([col, type, desc, tier]) => `
     <tr>
-      <td style="padding:4px 8px;border-bottom:1px solid var(--border);font-family:var(--font-mono);color:var(--accent2);">${col}</td>
-      <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--text-3);">${type}</td>
-      <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--text-3);">${desc}</td>
-      <td style="padding:4px 8px;border-bottom:1px solid var(--border);"><span style="font-size:9px;padding:2px 6px;border-radius:8px;${tier==='core'?'background:rgba(59,130,246,0.12);color:#60A5FA;':'background:rgba(139,92,246,0.12);color:#A78BFA;'}">${tier}</span></td>
+      <td style="padding:4px 8px;border-bottom:1px solid var(--border);font-family:var(--font-mono);color:#0891B2;">${col}</td>
+      <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:#6B7280;">${type}</td>
+      <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:#6B7280;">${desc}</td>
+      <td style="padding:4px 8px;border-bottom:1px solid var(--border);"><span style="font-size:9px;padding:2px 6px;border-radius:8px;${tier==='core'?'background:rgba(37,99,235,0.10);color:#60A5FA;':'background:rgba(139,92,246,0.12);color:#A78BFA;'}">${tier}</span></td>
     </tr>`).join('');
 }
 
